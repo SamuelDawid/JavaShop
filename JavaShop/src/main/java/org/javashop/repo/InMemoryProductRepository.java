@@ -29,9 +29,7 @@ public class InMemoryProductRepository implements ProductsRepository{
 
     @Override
     public void update(String id, @NonNull Electronics newProduct) {
-        if(findById(id).isEmpty()) throw new ProductNotFoundException(id);
-        else
-         electronicsList.put(id, newProduct);
+         electronicsList.replace(id,newProduct);
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.javashop.service;
 
 
 import lombok.NonNull;
+import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.models.Electronics;
 import org.javashop.repo.InMemoryProductRepository;
 
@@ -15,6 +16,7 @@ public class ProductManager {
             productsRepository.save(product);
     }
     public void modify(String id,@NonNull Electronics product){
+        productsRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         productsRepository.update(id, product);
     }
     public boolean delete(String id){
