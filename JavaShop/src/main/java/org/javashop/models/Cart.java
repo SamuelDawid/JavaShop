@@ -15,9 +15,11 @@ import java.util.UUID;
 @Getter
 public class Cart {
     private List<Electronics> cart;
+    private final Account customerAccount;
 
-    public Cart() {
+    public Cart(Account customerAccount) {
         this.cart = new LinkedList<>();
+        this.customerAccount = customerAccount;
     }
 
     public boolean addToCart(@NonNull Electronics product){
@@ -38,7 +40,7 @@ public class Cart {
                 throw new RemoveUnavailableProducts(product.getName());
             }
         }
-        Order newOrder = new Order(UUID.randomUUID(),List.copyOf(cart), LocalDateTime.now(),getTotal());
+        Order newOrder = new Order(customerAccount,UUID.randomUUID(),List.copyOf(cart), LocalDateTime.now(),getTotal());
         cart.clear();
         return newOrder ;
     }
