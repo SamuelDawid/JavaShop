@@ -14,7 +14,7 @@ import java.math.RoundingMode;
 @Getter
 @SuperBuilder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Product {
+public class Electronics {
     @EqualsAndHashCode.Include
     private final String Id;
     private String name;
@@ -23,7 +23,7 @@ public class Product {
     @Setter
     private int quantity;
 
-    public Product(@NonNull String id, @NonNull String name, BigDecimal price, int quantity) {
+    public Electronics (String id,String name, BigDecimal price, int quantity) {
         Validate.notBlank(name,"Name can not be blank");
         Validate.notBlank(id,"Id can not be blank");
         Validate.isTrue(price.signum() > 0,"Price must be more than 0");
