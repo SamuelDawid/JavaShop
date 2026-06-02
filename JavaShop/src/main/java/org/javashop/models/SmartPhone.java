@@ -2,8 +2,8 @@ package org.javashop.models;
 
 import org.apache.commons.lang3.Validate;
 import org.javashop.enums.Colour;
-import org.javashop.enums.Phone.ACCESSORIES;
-import org.javashop.enums.Phone.BATTERY;
+import org.javashop.enums.phone.ACCESSORIES;
+import org.javashop.enums.phone.BATTERY;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

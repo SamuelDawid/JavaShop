@@ -1,9 +1,9 @@
 package org.javashop.models;
 
 import org.apache.commons.lang3.Validate;
-import org.javashop.enums.PC.CPU;
-import org.javashop.enums.PC.GPU;
-import org.javashop.enums.PC.RAM;
+import org.javashop.enums.pc.CPU;
+import org.javashop.enums.pc.GPU;
+import org.javashop.enums.pc.RAM;
 
 import java.math.BigDecimal;
 

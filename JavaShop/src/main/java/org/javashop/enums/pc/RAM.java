@@ -1,4 +1,4 @@
-package org.javashop.enums.PC;
+package org.javashop.enums.pc;
 
 public enum RAM {
     GB16("16 GB"),
