@@ -3,6 +3,7 @@ package org.javashop.service;
 
 import lombok.RequiredArgsConstructor;
 
+import org.javashop.Exceptions.OrderProcessingException;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.models.Invoice;
 import org.javashop.models.InvoiceLine;
@@ -30,7 +31,7 @@ public class OrderProcessor {
                 adjustedInvoice.add(productLine);
                 newTotal = newTotal.add(currentProduct.getPrice().multiply(BigDecimal.valueOf(shippedQty)));
         }
-
+        if(newTotal.signum() == 0) throw new OrderProcessingException();
         String invID = "INV"+order.dateTime().format(DateTimeFormatter.ofPattern("-yyyyMMdd-"))+(counter++);
         return new Invoice(
                 invID,

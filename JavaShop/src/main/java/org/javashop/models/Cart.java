@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import org.javashop.Exceptions.EmptyCartException;
+import org.javashop.Exceptions.InvalidQuantityException;
 import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.Exceptions.UnavailableProducts;
 import org.javashop.domain.User.Account;
@@ -29,7 +30,7 @@ public class Cart {
     }
     public boolean addToCart(@NonNull Electronics product,int howMany){
         if(!product.isAvailable()) throw new UnavailableProducts(product.getName());
-
+        if(howMany <= 0) throw new InvalidQuantityException();
        return cart.add(new CartItem(product,howMany));
     }
     public boolean removeFromCart(@NonNull Electronics product)
