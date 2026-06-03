@@ -3,12 +3,10 @@ package org.javashop.service;
 
 import lombok.RequiredArgsConstructor;
 
-import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.models.Invoice;
 import org.javashop.models.InvoiceLine;
 import org.javashop.models.Order;
-import org.javashop.repo.InMemoryProductRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,7 +18,6 @@ import java.util.List;
 public class OrderProcessor {
     private final ProductManager productManager;
     private int counter = 1;
-
     Invoice processOrder(Order order){
         List<InvoiceLine> adjustedInvoice = new LinkedList<>();
         BigDecimal newTotal = BigDecimal.ZERO;
@@ -31,13 +28,13 @@ public class OrderProcessor {
 
                 InvoiceLine productLine = new InvoiceLine(currentProduct,orderedQty,shippedQty);
                 adjustedInvoice.add(productLine);
-                newTotal = newTotal.add(currentProduct.getPrice().multiply(BigDecimal.valueOf(currentProduct.getQuantity())));
+                newTotal = newTotal.add(currentProduct.getPrice().multiply(BigDecimal.valueOf(shippedQty)));
         }
 
         String invID = "INV"+order.dateTime().format(DateTimeFormatter.ofPattern("-yyyyMMdd-"))+(counter++);
         return new Invoice(
                 invID,
-                LocalDateTime.now(),
+                LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE),
                 adjustedInvoice,
                 newTotal,
                 order.account()
