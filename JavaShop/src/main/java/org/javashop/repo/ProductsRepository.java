@@ -1,6 +1,6 @@
 package org.javashop.repo;
 
-import org.javashop.models.Electronics;
+import org.javashop.domain.resources.Electronics;
 
 import java.util.List;
 import java.util.Optional;

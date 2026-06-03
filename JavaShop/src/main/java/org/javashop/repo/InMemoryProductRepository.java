@@ -1,8 +1,7 @@
 package org.javashop.repo;
 
 import lombok.NonNull;
-import org.javashop.Exceptions.ProductNotFoundException;
-import org.javashop.models.Electronics;
+import org.javashop.domain.resources.Electronics;
 
 import java.util.HashMap;
 import java.util.List;
