@@ -11,4 +11,12 @@ public record InvoiceLine(Electronics product,
                     Validate.isTrue(quantityOrdered > 0,"Ordered Quantity can't be negative");
                     Validate.isTrue(quantityShipped >= 0,"Shipped Quantity can't be negative");
                 }
+
+    @Override
+    public String toString() {
+        return product + " "  +
+                ", Ordered=" + quantityOrdered +
+                ", Shipped=" + quantityShipped ;
+
+    }
 }

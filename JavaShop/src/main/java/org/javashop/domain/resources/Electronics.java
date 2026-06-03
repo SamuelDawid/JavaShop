@@ -33,7 +33,7 @@ public class Electronics {
 
     @Override
     public String toString() {
-        return "Product[" + Id + "] " + name + price + " zł " +"("+quantity+")" ;
+        return "Product[" + Id + "] " + name +" "+ price + " zł " +"("+quantity+")" ;
     }
     public boolean isAvailable(){
         return this.quantity > 0;

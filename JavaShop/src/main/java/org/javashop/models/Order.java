@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public record Order(Account account,
                     UUID orderID,
-                    List<Electronics> productsList,
+                    List<CartItem> productsList,
                     LocalDateTime dateTime,
                     BigDecimal total,
                     OrderStatus status) {

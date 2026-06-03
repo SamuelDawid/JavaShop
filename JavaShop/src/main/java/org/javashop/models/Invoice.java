@@ -20,4 +20,14 @@ public record Invoice(String invoiceNumber,
      Validate.notNull(total,"Invoice must have total amount");
      Validate.notNull(userInformation,"Account must be assigned to Invoice");
  }
+
+    @Override
+    public String toString() {
+        return "Invoice " + invoiceNumber + "\n" +
+                ", issueDate:" + issueDate + "\n"
+                + listOfProductsWithAdjustedQuantity + "\n"+
+                ", total: " + total +"\n"+
+                ", user: " + userInformation
+                ;
+    }
 }

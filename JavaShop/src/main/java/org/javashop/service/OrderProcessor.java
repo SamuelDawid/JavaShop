@@ -3,6 +3,7 @@ package org.javashop.service;
 
 import lombok.RequiredArgsConstructor;
 
+import org.javashop.Exceptions.OrderProcessingException;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.models.Invoice;
 import org.javashop.models.InvoiceLine;
@@ -22,15 +23,15 @@ public class OrderProcessor {
         List<InvoiceLine> adjustedInvoice = new LinkedList<>();
         BigDecimal newTotal = BigDecimal.ZERO;
         for (int i = 0; i < order.productsList().size(); i++) {
-            Electronics currentProduct = order.productsList().get(i);
-            int orderedQty = currentProduct.getQuantity();
+            Electronics currentProduct = order.productsList().get(i).product();
+            int orderedQty = order.productsList().get(i).qty();
             int shippedQty = productManager.decreaseStock(currentProduct.getId(), orderedQty);
 
                 InvoiceLine productLine = new InvoiceLine(currentProduct,orderedQty,shippedQty);
                 adjustedInvoice.add(productLine);
                 newTotal = newTotal.add(currentProduct.getPrice().multiply(BigDecimal.valueOf(shippedQty)));
         }
-
+        if(newTotal.signum() == 0) throw new OrderProcessingException();
         String invID = "INV"+order.dateTime().format(DateTimeFormatter.ofPattern("-yyyyMMdd-"))+(counter++);
         return new Invoice(
                 invID,

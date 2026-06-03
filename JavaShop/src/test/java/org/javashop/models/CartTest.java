@@ -1,5 +1,6 @@
 package org.javashop.models;
 
+import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.Exceptions.UnavailableProducts;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Computer;
@@ -20,9 +21,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class CartTest {
     @Mock
@@ -77,8 +81,9 @@ class CartTest {
         assertThat(cart.removeFromCart(iPhone)).isTrue();
     }
     @Test
-    void shouldReturnFalseWhenProductDoesNotExist(){
-        assertThat(cart.removeFromCart(iPhone)).isFalse();
+    void shouldThrowWhenProductDoesNotExist(){
+        ProductNotFoundException ex = assertThrows(ProductNotFoundException.class, () -> cart.removeFromCart(iPhone));
+        assertThat("Product not found with ID: PH-1").isEqualTo(ex.getMessage());
     }
     @Test
     void shouldReturnPriceForOneItem(){
