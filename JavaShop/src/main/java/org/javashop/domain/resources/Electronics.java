@@ -1,4 +1,4 @@
-package org.javashop.models;
+package org.javashop.domain.resources;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;

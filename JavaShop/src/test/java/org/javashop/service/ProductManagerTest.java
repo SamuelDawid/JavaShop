@@ -6,9 +6,9 @@ import org.javashop.enums.pc.CPU;
 import org.javashop.enums.pc.GPU;
 import org.javashop.enums.pc.RAM;
 import org.javashop.enums.phone.BATTERY;
-import org.javashop.models.Computer;
-import org.javashop.models.Electronics;
-import org.javashop.models.SmartPhone;
+import org.javashop.domain.resources.Computer;
+import org.javashop.domain.resources.Electronics;
+import org.javashop.domain.resources.SmartPhone;
 import org.javashop.repo.InMemoryProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -64,6 +64,24 @@ class ProductManagerTest {
         when(productRepository.delete("SGS24")).thenReturn(true);
         //Act + Assert
         assertThat(productManager.delete("SGS24")).isTrue();
+    }
+    @Test
+    void ShouldDecreesStockSuccessfully(){
+        when(productRepository.findById(samsungGalaxy.getId())).thenReturn(Optional.of(samsungGalaxy));
+       int result = productManager.decreaseStock(samsungGalaxy.getId(),3);
+       assertThat(result).isEqualTo(3);
+       assertThat(samsungGalaxy.getQuantity()).isEqualTo(2);
+    }
+    @Test
+    void ShouldReturnZeroWhenDecreesStockByMaxQtyOrMore(){
+        when(productRepository.findById(samsungGalaxy.getId())).thenReturn(Optional.of(samsungGalaxy));
+        when(productRepository.findById(alienWereAurora.getId())).thenReturn(Optional.of(alienWereAurora));
+        int result = productManager.decreaseStock(samsungGalaxy.getId(),5);
+        int resultTwo = productManager.decreaseStock(alienWereAurora.getId(),20);
+        assertThat(result).isEqualTo(5);
+        assertThat(resultTwo).isEqualTo(2);
+        assertThat(samsungGalaxy.getQuantity()).isEqualTo(0);
+        assertThat(alienWereAurora.getQuantity()).isEqualTo(0);
     }
     @Nested
     class ProductTest{
@@ -139,7 +157,5 @@ class ProductManagerTest {
 
         }
     }
-    @Test
-    void delete() {
-    }
+
 }

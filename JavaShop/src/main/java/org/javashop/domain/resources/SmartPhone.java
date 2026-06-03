@@ -1,4 +1,4 @@
-package org.javashop.models;
+package org.javashop.domain.resources;
 
 import org.apache.commons.lang3.Validate;
 import org.javashop.enums.Colour;
