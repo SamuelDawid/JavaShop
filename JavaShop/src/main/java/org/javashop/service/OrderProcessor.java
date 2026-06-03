@@ -42,7 +42,5 @@ public class OrderProcessor {
                 newTotal,
                 order.account()
         );
-
-
     }
 }

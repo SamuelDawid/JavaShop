@@ -22,7 +22,11 @@ public class ProductManager {
     public int decreaseStock(String id, int requestedQty){
         Electronics product = productsRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         int shippedQty = Math.min(requestedQty, product.getQuantity());
-        product.setQuantity(product.getQuantity() - requestedQty);
+        int qtyLeft = product.getQuantity() - requestedQty;
+        if(qtyLeft < 0)
+            product.setQuantity(0);
+        else
+            product.setQuantity(qtyLeft);
         productsRepository.update(id,product);
         return shippedQty;
     }

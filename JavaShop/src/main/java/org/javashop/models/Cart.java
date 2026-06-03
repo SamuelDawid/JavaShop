@@ -31,11 +31,12 @@ public class Cart {
         product.setQuantity(howMany);
        return cart.add(product);
     }
-    public boolean removeFromCart(@NonNull Electronics product){
+    public boolean removeFromCart(@NonNull Electronics product)
+    {
        return cart.remove(product);
     }
     public BigDecimal getTotal(){
-        return cart.stream().map(Electronics::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add).setScale(2,RoundingMode.HALF_UP);
+        return cart.stream().map(electronics -> (electronics.getPrice().multiply(BigDecimal.valueOf(electronics.getQuantity())))).reduce(BigDecimal.ZERO,BigDecimal::add).setScale(2,RoundingMode.HALF_UP);
     }
     public Order checkout(){
         if(cart.isEmpty()) throw new EmptyCartException();
