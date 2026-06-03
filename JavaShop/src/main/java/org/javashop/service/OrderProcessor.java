@@ -22,7 +22,7 @@ public class OrderProcessor {
         List<InvoiceLine> adjustedInvoice = new LinkedList<>();
         BigDecimal newTotal = BigDecimal.ZERO;
         for (int i = 0; i < order.productsList().size(); i++) {
-            Electronics currentProduct = order.productsList().get(i);
+            Electronics currentProduct = order.productsList().get(i).product();
             int orderedQty = currentProduct.getQuantity();
             int shippedQty = productManager.decreaseStock(currentProduct.getId(), orderedQty);
 

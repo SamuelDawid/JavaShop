@@ -19,7 +19,7 @@ import java.util.UUID;
 @ToString
 @Getter
 public class Cart {
-    private final List<Electronics> cart;
+    private final List<CartItem> cart;
     private final Account customerAccount;
 
     public Cart(Account customerAccount) {
@@ -28,15 +28,18 @@ public class Cart {
     }
     public boolean addToCart(@NonNull Electronics product,int howMany){
         if(!product.isAvailable()) throw new UnavailableProducts(product.getName());
-        product.setQuantity(howMany);
-       return cart.add(product);
+
+       return cart.add(new CartItem(product,howMany));
     }
     public boolean removeFromCart(@NonNull Electronics product)
     {
        return cart.remove(product);
     }
     public BigDecimal getTotal(){
-        return cart.stream().map(electronics -> (electronics.getPrice().multiply(BigDecimal.valueOf(electronics.getQuantity())))).reduce(BigDecimal.ZERO,BigDecimal::add).setScale(2,RoundingMode.HALF_UP);
+        return cart.stream().map( cartItem -> cartItem.product().getPrice()
+                .multiply(BigDecimal.valueOf(cartItem.product().getQuantity())))
+                .reduce(BigDecimal.ZERO,BigDecimal::add).setScale(2,RoundingMode.HALF_UP);
+
     }
     public Order checkout(){
         if(cart.isEmpty()) throw new EmptyCartException();

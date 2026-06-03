@@ -1,0 +1,81 @@
+package org.javashop.service;
+
+import lombok.RequiredArgsConstructor;
+import org.javashop.Exceptions.ProductNotFoundException;
+import org.javashop.domain.resources.Electronics;
+import org.javashop.menu.MenuManager;
+import org.javashop.models.Cart;
+import org.javashop.models.CartItem;
+import org.javashop.models.Invoice;
+
+import java.util.Scanner;
+@RequiredArgsConstructor
+public class ShopCLI {
+    private final ProductManager productManager;
+    private final Cart cart;
+    private final OrderProcessor orderProcessor;
+    //
+    private final Scanner scanner = new Scanner(System.in);
+    private final MenuManager menuManager = new MenuManager();
+
+    public void start() {
+        while (true) {
+            menuManager.printMainManu();
+            String choice = scanner.nextLine();
+            switch (choice) {
+                case "1" -> showProducts();
+                case "2" -> addToCart();
+                case "3" -> showCart();
+                case "4" -> checkout();
+                case "5" -> {
+                    System.out.println("Bye!");
+                    return;
+                }
+                default -> System.out.println("Unknown option");
+            }
+        }
+    }
+
+    private void showProducts() {
+        for (String s : productManager.returnAllProducts())
+            System.out.println(s);
+    }
+
+    private void addToCart() {
+        while (true) {
+            System.out.println("Please provide productID: ");
+            String productId = scanner.nextLine();
+            System.out.println("How many: ");
+            String howMany = scanner.nextLine();
+            try {
+                Electronics product = productManager.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+                cart.addToCart(product, Integer.parseInt(howMany));
+                return;
+            } catch (NumberFormatException | ProductNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+
+    }
+
+    private void showCart() {
+        System.out.println("Your cart: ");
+        for (CartItem e : cart.getCart())
+            System.out.println(e);
+
+        System.out.println("Total:" + cart.getTotal());
+    }
+
+    private void checkout() {
+        try {
+            Invoice invoice = orderProcessor.processOrder(cart.checkout());
+            System.out.println(invoice);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+    }
+}
+
