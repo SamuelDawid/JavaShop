@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import org.javashop.Exceptions.EmptyCartException;
+import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.Exceptions.UnavailableProducts;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Electronics;
@@ -33,11 +34,12 @@ public class Cart {
     }
     public boolean removeFromCart(@NonNull Electronics product)
     {
-       return cart.remove(product);
+        CartItem itemToFind = cart.stream().filter( cartItem -> cartItem.product().equals(product)).findAny().orElseThrow(() -> new ProductNotFoundException(product.getId()));
+       return cart.remove(itemToFind);
     }
     public BigDecimal getTotal(){
         return cart.stream().map( cartItem -> cartItem.product().getPrice()
-                .multiply(BigDecimal.valueOf(cartItem.product().getQuantity())))
+                .multiply(BigDecimal.valueOf(cartItem.qty())))
                 .reduce(BigDecimal.ZERO,BigDecimal::add).setScale(2,RoundingMode.HALF_UP);
 
     }
