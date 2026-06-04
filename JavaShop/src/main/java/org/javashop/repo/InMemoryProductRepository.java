@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type In memory product repository.
+ */
 public class InMemoryProductRepository implements ProductsRepository{
     private final Map<String,Electronics> electronicsList = new HashMap<>();
 

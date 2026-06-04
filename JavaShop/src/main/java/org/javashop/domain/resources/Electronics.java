@@ -7,6 +7,9 @@ import org.apache.commons.lang3.Validate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * The type Electronics.
+ */
 @Getter
 @SuperBuilder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -19,6 +22,14 @@ public class Electronics {
     @Setter
     private int quantity;
 
+    /**
+     * Instantiates a new Electronics.
+     *
+     * @param id       the id
+     * @param name     the name
+     * @param price    the price
+     * @param quantity the quantity
+     */
     public Electronics (String id,String name, BigDecimal price, int quantity) {
         Validate.notBlank(name,"Name can not be blank");
         Validate.notBlank(id,"Id can not be blank");
@@ -35,6 +46,12 @@ public class Electronics {
     public String toString() {
         return "Product[" + Id + "] " + name +" "+ price + " zł " +"("+quantity+")" ;
     }
+
+    /**
+     * Is available boolean.
+     *
+     * @return the boolean
+     */
     public boolean isAvailable(){
         return this.quantity > 0;
     }

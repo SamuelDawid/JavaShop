@@ -1,8 +1,14 @@
 package org.javashop.menu;
 
+/**
+ * The type Menu manager.
+ */
 public class MenuManager {
 
-    public void printMainManu(){
+    /**
+     * Print main menu.
+     */
+    public void printMainMenu(){
         System.out.println( """
                 === JAVASHOP ===
                 1. Przeglądaj produkty

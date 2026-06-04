@@ -11,12 +11,25 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * The type Order.
+ */
 public record Order(Account account,
                     UUID orderID,
                     List<CartItem> productsList,
                     LocalDateTime dateTime,
                     BigDecimal total,
                     OrderStatus status) implements Savable {
+    /**
+     * Instantiates a new Order.
+     *
+     * @param account      the account
+     * @param orderID      the order id
+     * @param productsList the products list
+     * @param dateTime     the date time
+     * @param total        the total
+     * @param status       the status
+     */
     public Order{
         Validate.notNull(account,"Account not known");
         Validate.notNull(orderID,"Must contain order ID");
@@ -27,7 +40,7 @@ public record Order(Account account,
 
     @Override
     public String toString() {
-        return "Order{orderID}" +
+        return "Order{"+orderID+"}" +
                 "account=" + account + "\n"+
                 ", productsList=" + productsList +"\n"+
                 ", dateTime=" + dateTime +"\n"+

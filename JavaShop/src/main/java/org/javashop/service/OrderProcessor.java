@@ -19,11 +19,26 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * The type Order processor.
+ */
 @RequiredArgsConstructor
 public class OrderProcessor {
     private final ProductManager productManager;
-    private int counter = 1;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final AtomicInteger counter = new AtomicInteger(1);
+
+    /**
+     * Process order invoice.
+     *
+     * @param order the order
+     * @return the invoice
+     */
     Invoice processOrder(@NonNull Order order){
         List<InvoiceLine> adjustedInvoice = new LinkedList<>();
         BigDecimal newTotal = BigDecimal.ZERO;
@@ -37,7 +52,7 @@ public class OrderProcessor {
                 newTotal = newTotal.add(currentProduct.getPrice().multiply(BigDecimal.valueOf(shippedQty)));
         }
         if(newTotal.signum() == 0) throw new OrderProcessingException();
-        String invID = "INV"+order.dateTime().format(DateTimeFormatter.ofPattern("-yyyyMMdd-"))+(counter++);
+        String invID = "INV"+order.dateTime().format(DateTimeFormatter.ofPattern("-yyyyMMdd-"))+(counter.getAndIncrement());
         return new Invoice(
                 invID,
                 LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE),
@@ -47,4 +62,10 @@ public class OrderProcessor {
         );
     }
 
+    public Future<Invoice> submitOrder(@NonNull Order order){
+        return executorService.submit(() -> processOrder(order));
+    }
+    public void shutDown(){
+        executorService.shutdown();
+    }
 }

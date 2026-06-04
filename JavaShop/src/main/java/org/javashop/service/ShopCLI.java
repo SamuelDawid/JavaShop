@@ -11,6 +11,12 @@ import org.javashop.models.Order;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+/**
+ * The type Shop cli.
+ */
 @RequiredArgsConstructor
 public class ShopCLI {
     private final ProductManager productManager;
@@ -20,9 +26,12 @@ public class ShopCLI {
     private final Scanner scanner = new Scanner(System.in);
     private final MenuManager menuManager = new MenuManager();
 
+    /**
+     * Start.
+     */
     public void start() {
         while (true) {
-            menuManager.printMainManu();
+            menuManager.printMainMenu();
             String choice = scanner.nextLine();
             switch (choice) {
                 case "1" -> showProducts();
@@ -31,6 +40,7 @@ public class ShopCLI {
                 case "4" -> checkout();
                 case "5" -> {
                     System.out.println("Bye!");
+                    orderProcessor.shutDown();
                     return;
                 }
                 default -> System.out.println("Unknown option");
@@ -72,11 +82,12 @@ public class ShopCLI {
     private void checkout() {
         try {
             Order order = cart.checkout();
-            Invoice invoice = orderProcessor.processOrder(order);
+            Future<Invoice> future = orderProcessor.submitOrder(order);
+            Invoice invoice = future.get();
             FilesHandler.saveToFile(order,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
             FilesHandler.saveToFile(invoice,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
             System.out.println(invoice);
-        } catch (RuntimeException | IOException e) {
+        } catch (RuntimeException | IOException | ExecutionException | InterruptedException e) {
             System.out.println(e.getMessage());
         }
 
