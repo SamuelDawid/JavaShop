@@ -19,11 +19,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -48,6 +52,23 @@ class OrderProcessorTest {
         Account testAccount = new Account("123-123","Test Subject");
         testCart = new Cart(testAccount);
 
+    }
+    @Nested class FileHandlerTest{
+        @Test
+        void shouldSaveFileSuccessfully(@TempDir Path tempDir) throws IOException {
+            setUp();
+            testCart.addToCart(gaming,2);
+            testCart.addToCart(office,3);
+            testOrder = testCart.checkout();
+            //act
+            FilesHandler.saveToFile(testOrder,tempDir);
+            Path savedFile = tempDir.resolve(testOrder.fileName());
+            String content = Files.readString(savedFile);
+            //assert
+            assertThat(savedFile).exists();
+            assertThat(content).contains(testOrder.orderID().toString());
+            assertThat(content).contains("123-123");
+        }
     }
     @Test
     void shouldReturnInvoiceSuccessfully(){
