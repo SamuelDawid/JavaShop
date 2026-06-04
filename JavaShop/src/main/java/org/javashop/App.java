@@ -4,6 +4,7 @@ package org.javashop;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Computer;
 import org.javashop.domain.resources.SmartPhone;
+import org.javashop.enums.AccountType;
 import org.javashop.enums.Colour;
 import org.javashop.enums.pc.CPU;
 import org.javashop.enums.pc.GPU;
@@ -11,6 +12,8 @@ import org.javashop.enums.pc.RAM;
 import org.javashop.enums.phone.BATTERY;
 import org.javashop.models.Cart;
 import org.javashop.repo.InMemoryProductRepository;
+import org.javashop.repo.InMemoryVoucherRepository;
+import org.javashop.service.DiscountService;
 import org.javashop.service.OrderProcessor;
 import org.javashop.service.ProductManager;
 import org.javashop.service.ShopCLI;
@@ -23,9 +26,11 @@ public class App
     public static void main( String[] args ) throws InterruptedException {
 
         InMemoryProductRepository repository = new InMemoryProductRepository();
+        InMemoryVoucherRepository voucherRepository = new InMemoryVoucherRepository();
         ProductManager manager = new ProductManager(repository);
         OrderProcessor orderProcessor = new OrderProcessor(manager);
-        Account account = new Account("123","Samuel K");
+        DiscountService discountService = new DiscountService(voucherRepository);
+        Account account = new Account("123","Samuel K", AccountType.NORMAL);
         Cart cart = new Cart(account);
         //regionProducts
         manager.addAllProducts(List.of(
@@ -41,7 +46,7 @@ public class App
                 BATTERY.mAh_5000, Colour.GREEN)));
 
         //endregion
-        new ShopCLI(manager,cart,orderProcessor).start();
+        new ShopCLI(manager,cart,orderProcessor,discountService,account).start();
 
 
     }

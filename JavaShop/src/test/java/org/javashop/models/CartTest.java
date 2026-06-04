@@ -5,6 +5,7 @@ import org.javashop.Exceptions.UnavailableProducts;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Computer;
 import org.javashop.domain.resources.SmartPhone;
+import org.javashop.enums.AccountType;
 import org.javashop.enums.Colour;
 import org.javashop.enums.OrderStatus;
 import org.javashop.enums.pc.CPU;
@@ -53,7 +54,7 @@ class CartTest {
         budget = new SmartPhone("PH-3", "Xiaomi 13", new BigDecimal("999.99"), 15,
                 BATTERY.mAh_5000, Colour.GREEN);
         // Account
-        Account testAccount = new Account("123-123","Test Subject");
+        Account testAccount = new Account("123-123","Test Subject", AccountType.NORMAL);
         cart = new Cart(testAccount);
     }
 

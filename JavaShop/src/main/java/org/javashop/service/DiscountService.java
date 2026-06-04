@@ -14,6 +14,9 @@ import org.javashop.repo.InMemoryVoucherRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
+import java.util.Map;
+
 @RequiredArgsConstructor
 public class DiscountService implements DiscountStrategy {
     private final InMemoryVoucherRepository voucherRepository;
@@ -37,5 +40,15 @@ public class DiscountService implements DiscountStrategy {
         Validate.isTrue(points > 0, "points amount can not be negative");
         if(account.getType() == AccountType.COMPANY) throw new NotAvailableForCompanyAccountsException();
         return voucherRepository.generateVoucher(points);
+    }
+    public Map<Integer,Integer> getPointsToDiscount(){
+        return Collections.unmodifiableMap(voucherRepository.getPointsToDiscount());
+    }
+    public int getMaxAvailableDiscount(int currentPoints){
+        return voucherRepository.getPointsToDiscount().entrySet().stream()
+                .filter(e -> e.getKey() <= currentPoints)
+                .mapToInt(Map.Entry::getValue)
+                .max()
+                .orElse(0);
     }
 }

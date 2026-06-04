@@ -5,6 +5,7 @@ import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Computer;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.domain.resources.SmartPhone;
+import org.javashop.enums.AccountType;
 import org.javashop.enums.Colour;
 import org.javashop.enums.OrderStatus;
 import org.javashop.enums.pc.CPU;
@@ -49,7 +50,7 @@ class OrderProcessorTest {
                 CPU.AMD, GPU.NVIDIA, RAM.GB32);
          office = new Computer("PC-2", "Office Pro", new BigDecimal("1499.99"), 10,
                 CPU.INTEL, GPU.INTEL, RAM.GB16);
-        Account testAccount = new Account("123-123","Test Subject");
+        Account testAccount = new Account("123-123","Test Subject", AccountType.NORMAL);
         testCart = new Cart(testAccount);
 
     }

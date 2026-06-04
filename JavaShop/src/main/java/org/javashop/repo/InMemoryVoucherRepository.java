@@ -10,10 +10,7 @@ import org.javashop.models.Voucher;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.TemporalAmount;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 public class InMemoryVoucherRepository implements VoucherRepository{
@@ -47,6 +44,8 @@ public class InMemoryVoucherRepository implements VoucherRepository{
         Integer discount = POINTS_TO_DISCOUNT.get(points);
         if(discount == null) throw new NotEnoughPointsException("Not enough points");
         return new Voucher(voucher, LocalDate.now().plus(VOUCHER_MAX_DAYS),discount);
-
+    }
+    public Map<Integer,Integer> getPointsToDiscount(){
+        return Collections.unmodifiableMap(POINTS_TO_DISCOUNT);
     }
 }
