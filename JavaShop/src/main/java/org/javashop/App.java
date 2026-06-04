@@ -23,6 +23,7 @@ public class App
 {
     public static void main( String[] args )
     {
+
         InMemoryProductRepository repository = new InMemoryProductRepository();
         ProductManager manager = new ProductManager(repository);
         OrderProcessor orderProcessor = new OrderProcessor(manager);
@@ -41,7 +42,7 @@ public class App
         new SmartPhone("PH-3", "Xiaomi 13", new BigDecimal("999.99"), 15,
                 BATTERY.mAh_5000, Colour.GREEN)));
 
-        //endRegion
+        //endregion
         new ShopCLI(manager,cart,orderProcessor).start();
 
 

@@ -1,0 +1,5 @@
+Order{orderID}account=Account(accountNumber=123, ownerName=Samuel K, type=NORMAL)
+, productsList=[Product[PC-1] Gaming Beast 3999.99 zł (1)]
+, dateTime=2026-06-04T10:31:27.584105100
+, total=3999.99
+, status=PENDING

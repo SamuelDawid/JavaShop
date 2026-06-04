@@ -1,15 +1,20 @@
 package org.javashop.service;
 
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import org.javashop.Exceptions.OrderProcessingException;
 import org.javashop.domain.resources.Electronics;
+import org.javashop.interfaces.Savable;
 import org.javashop.models.Invoice;
 import org.javashop.models.InvoiceLine;
 import org.javashop.models.Order;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
@@ -19,7 +24,7 @@ import java.util.List;
 public class OrderProcessor {
     private final ProductManager productManager;
     private int counter = 1;
-    Invoice processOrder(Order order){
+    Invoice processOrder(@NonNull Order order){
         List<InvoiceLine> adjustedInvoice = new LinkedList<>();
         BigDecimal newTotal = BigDecimal.ZERO;
         for (int i = 0; i < order.productsList().size(); i++) {
@@ -41,4 +46,5 @@ public class OrderProcessor {
                 order.account()
         );
     }
+
 }

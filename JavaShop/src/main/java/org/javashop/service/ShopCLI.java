@@ -7,7 +7,10 @@ import org.javashop.menu.MenuManager;
 import org.javashop.models.Cart;
 import org.javashop.models.CartItem;
 import org.javashop.models.Invoice;
+import org.javashop.models.Order;
 
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.Scanner;
 @RequiredArgsConstructor
 public class ShopCLI {
@@ -69,9 +72,12 @@ public class ShopCLI {
 
     private void checkout() {
         try {
-            Invoice invoice = orderProcessor.processOrder(cart.checkout());
+            Order order = cart.checkout();
+            Invoice invoice = orderProcessor.processOrder(order);
+            FilesHandling.saveOrderToFile(order);
+            FilesHandling.saveOrderToFile(invoice);
             System.out.println(invoice);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | IOException e) {
             System.out.println(e.getMessage());
         }
 
