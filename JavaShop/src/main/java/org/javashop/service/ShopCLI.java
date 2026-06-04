@@ -59,7 +59,7 @@ public class ShopCLI {
         String userAnswer = scanner.nextLine();
         if(userAnswer.equalsIgnoreCase("yes")){
             int maxDiscount = discountService.getMaxAvailableDiscount(account.getPoints());
-            int pointsToDeduct = maxDiscount * 10;
+            int pointsToDeduct = discountService.getPointsForDiscount(maxDiscount);
             Voucher newVoucher = discountService.exchangePoints(account, pointsToDeduct);
             account.setPoints(account.getPoints() - pointsToDeduct);
             account.addVoucherToAccount(newVoucher);

@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.javashop.Exceptions.InvalidVoucherException;
+import org.javashop.Exceptions.NoSuchDiscountException;
 import org.javashop.Exceptions.NotAvailableForCompanyAccountsException;
 import org.javashop.Exceptions.OnlyCompanyAccountDiscountException;
 import org.javashop.domain.User.Account;
@@ -50,5 +51,12 @@ public class DiscountService implements DiscountStrategy {
                 .mapToInt(Map.Entry::getValue)
                 .max()
                 .orElse(0);
+    }
+    public int getPointsForDiscount(int discountPercent){
+        return voucherRepository.getPointsToDiscount().entrySet().stream()
+                .filter(e -> e.getValue().equals(discountPercent))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchDiscountException("No such discount: " + discountPercent));
     }
 }
