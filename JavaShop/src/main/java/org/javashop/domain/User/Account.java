@@ -14,4 +14,6 @@ public class Account {
     private final String ownerName;
     @Setter
     private AccountType type = AccountType.NORMAL;
+    @Setter
+    private int points =100;
 }

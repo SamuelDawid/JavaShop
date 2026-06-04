@@ -87,6 +87,7 @@ public class ShopCLI {
                         try {
                             FilesHandler.saveToFile(inv,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
                             FilesHandler.saveToFile(order,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
+                            System.out.println("Thank you for your order!");
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }

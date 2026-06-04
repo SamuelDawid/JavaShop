@@ -6,16 +6,13 @@ import lombok.RequiredArgsConstructor;
 
 import org.javashop.Exceptions.OrderProcessingException;
 import org.javashop.domain.resources.Electronics;
-import org.javashop.interfaces.Savable;
 import org.javashop.models.Invoice;
 import org.javashop.models.InvoiceLine;
 import org.javashop.models.Order;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +50,7 @@ public class OrderProcessor {
         String invID = "INV"+order.dateTime().format(DateTimeFormatter.ofPattern("-yyyyMMdd-"))+(counter.getAndIncrement());
         return new Invoice(
                 invID,
-                LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE),
+               ZonedDateTime.now(ZoneId.systemDefault()),
                 adjustedInvoice,
                 newTotal,
                 order.account()

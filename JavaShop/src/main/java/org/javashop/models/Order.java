@@ -8,6 +8,7 @@ import org.javashop.interfaces.Savable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ import java.util.UUID;
 public record Order(Account account,
                     UUID orderID,
                     List<CartItem> productsList,
-                    LocalDateTime dateTime,
+                    ZonedDateTime dateTime,
                     BigDecimal total,
                     OrderStatus status) implements Savable {
     /**

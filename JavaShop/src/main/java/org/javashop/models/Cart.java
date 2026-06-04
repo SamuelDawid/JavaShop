@@ -14,6 +14,8 @@ import org.javashop.enums.OrderStatus;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -81,7 +83,7 @@ public class Cart {
      */
     public Order checkout(){
         if(cart.isEmpty()) throw new EmptyCartException();
-        Order newOrder = new Order(customerAccount,UUID.randomUUID(),List.copyOf(cart), LocalDateTime.now(),getTotal(), OrderStatus.PENDING);
+        Order newOrder = new Order(customerAccount,UUID.randomUUID(),List.copyOf(cart), ZonedDateTime.now(ZoneId.systemDefault()),getTotal(), OrderStatus.PENDING);
         cart.clear();
         return newOrder;
     }

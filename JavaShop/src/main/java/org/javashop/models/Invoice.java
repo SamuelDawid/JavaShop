@@ -7,13 +7,15 @@ import org.javashop.interfaces.Savable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
  * The type Invoice.
  */
 public record Invoice(String invoiceNumber,
-                      String issueDate,
+                      ZonedDateTime issueDate,
                       List<InvoiceLine> listOfProductsWithAdjustedQuantity,
                       BigDecimal total,
                       Account userInformation) implements Savable {
@@ -28,7 +30,6 @@ public record Invoice(String invoiceNumber,
      */
     public Invoice{
      Validate.notEmpty(invoiceNumber,"Inv number must be filled");
-     Validate.notEmpty(issueDate,"Issue Date must be present");
      Validate.notNull(listOfProductsWithAdjustedQuantity,"product List must be present");
      Validate.notNull(total,"Invoice must have total amount");
      Validate.notNull(userInformation,"Account must be assigned to Invoice");
@@ -36,8 +37,9 @@ public record Invoice(String invoiceNumber,
 
     @Override
     public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z");
         return "Invoice " + invoiceNumber + "\n" +
-                "-issueDate:" + issueDate + "\n"
+                "-issueDate:" + issueDate.format(formatter) + "\n"
                 + listOfProductsWithAdjustedQuantity + "\n"+
                 "-total: " + total +"\n"+
                 "-user: " + userInformation;
