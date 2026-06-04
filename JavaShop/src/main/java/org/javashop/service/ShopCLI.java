@@ -11,6 +11,7 @@ import org.javashop.models.Order;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -29,7 +30,7 @@ public class ShopCLI {
     /**
      * Start.
      */
-    public void start() {
+    public void start() throws InterruptedException {
         while (true) {
             menuManager.printMainMenu();
             String choice = scanner.nextLine();
@@ -80,18 +81,19 @@ public class ShopCLI {
     }
 
     private void checkout() {
-        try {
             Order order = cart.checkout();
-            Future<Invoice> future = orderProcessor.submitOrder(order);
-            Invoice invoice = future.get();
-            FilesHandler.saveToFile(order,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
-            FilesHandler.saveToFile(invoice,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
-            System.out.println(invoice);
-        } catch (RuntimeException | IOException | ExecutionException | InterruptedException e) {
-            System.out.println(e.getMessage());
-        }
-
-
+             orderProcessor.submitOrderAsync(order)
+                    .thenAccept(inv -> {
+                        try {
+                            FilesHandler.saveToFile(inv,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
+                            FilesHandler.saveToFile(order,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).exceptionally(e -> {
+                        System.out.println("Error: " + e.getMessage());
+                        return null;
+                    });
     }
 }
 

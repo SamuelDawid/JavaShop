@@ -3,7 +3,6 @@ package org.javashop;
 
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Computer;
-import org.javashop.domain.resources.Electronics;
 import org.javashop.domain.resources.SmartPhone;
 import org.javashop.enums.Colour;
 import org.javashop.enums.pc.CPU;
@@ -21,8 +20,7 @@ import java.util.List;
 
 public class App
 {
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) throws InterruptedException {
 
         InMemoryProductRepository repository = new InMemoryProductRepository();
         ProductManager manager = new ProductManager(repository);

@@ -19,9 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -65,7 +63,11 @@ public class OrderProcessor {
     public Future<Invoice> submitOrder(@NonNull Order order){
         return executorService.submit(() -> processOrder(order));
     }
-    public void shutDown(){
+    public void shutDown() throws InterruptedException{
         executorService.shutdown();
+        executorService.awaitTermination(5, TimeUnit.SECONDS);
+    }
+    public CompletableFuture<Invoice> submitOrderAsync(Order order){
+        return CompletableFuture.supplyAsync(() -> processOrder(order), executorService);
     }
 }
