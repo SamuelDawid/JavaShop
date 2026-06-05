@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The type Cart.
+ * Represents a shopping cart for a customer account.
+ * Supports adding/removing products, calculating totals, and checking out.
  */
 @ToString
 @Getter
@@ -42,11 +43,12 @@ public class Cart {
     }
 
     /**
-     * Add to cart boolean.
+     * Adds a product to the cart.
      *
-     * @param product the product
-     * @param howMany the how many
-     * @return the boolean
+     * @param product the product to add
+     * @param howMany the quantity to add (must be greater than 0)
+     * @throws UnavailableProducts  if the product is not available
+     * @throws  InvalidQuantityException if the quantity is zero or negative
      */
     public void addToCart(@NonNull Electronics product,int howMany){
         if(!product.isAvailable()) throw new UnavailableProducts(product.getName());
@@ -56,10 +58,11 @@ public class Cart {
     }
 
     /**
-     * Remove from cart boolean.
+     * Removes a product from the cart.
      *
      * @param product the product
-     * @return the boolean
+     * @return true if the product was successfully removed
+     * @throws ProductNotFoundException if the product is not in the cart
      */
     public boolean removeFromCart(@NonNull Electronics product)
     {
@@ -69,24 +72,33 @@ public class Cart {
     }
 
     /**
-     * Get total big decimal.
+     * Calculates the total price of all items currently in the cart.
      *
-     * @return the big decimal
+     * @return the total price rounded to 2 decimal places
      */
     public BigDecimal calculateTotal(){
         return cart.stream().map( cartItem -> cartItem.product().getPrice()
                 .multiply(BigDecimal.valueOf(cartItem.qty())))
                 .reduce(BigDecimal.ZERO,BigDecimal::add).setScale(2,RoundingMode.HALF_UP);
 
-    }
+    } /**
+     * Sets the cart total to the given value.
+     * Used to apply discounts to the cart total.
+     *
+     * @param total the new total to set
+     * @return the updated cart total
+     */
+
     public BigDecimal setCartTotal(BigDecimal total){
         this.cartTotal = total;
         return cartTotal;
     }
     /**
-     * Checkout order.
+     * Creates an Order from the current cart and clears it.
+     * Preserves the original subtotal and the potentially discounted total.
      *
-     * @return the order
+     * @return the created order with PENDING status
+     * @throws EmptyCartException if the cart is empty
      */
     public Order checkout(){
         if(cart.isEmpty()) throw new EmptyCartException();

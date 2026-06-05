@@ -21,7 +21,9 @@ import java.util.Scanner;
 
 
 /**
- * The type Shop cli.
+ * Command-line interface for the shop application.
+ * Handles user interaction for browsing products, managing cart,
+ * checkout, account info, and loyalty points exchange.
  */
 @RequiredArgsConstructor
 public class ShopCLI {
@@ -34,7 +36,8 @@ public class ShopCLI {
     private final MenuManager menuManager = new MenuManager();
 
     /**
-     * Start.
+     * Starts the main application loop.
+     * Runs until the user selects the exit option.
      */
     public void start() throws InterruptedException {
         while (true) {
