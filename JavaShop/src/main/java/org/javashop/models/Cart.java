@@ -89,7 +89,15 @@ public class Cart {
      */
     public Order checkout(){
         if(cart.isEmpty()) throw new EmptyCartException();
-        Order newOrder = new Order(customerAccount,UUID.randomUUID(),List.copyOf(cart), ZonedDateTime.now(ZoneId.systemDefault()),setCartTotal(calculateTotal()), OrderStatus.PENDING);
+        BigDecimal subTotal = calculateTotal();
+        Order newOrder = new Order(
+                customerAccount,
+                UUID.randomUUID(),
+                List.copyOf(cart),
+                ZonedDateTime.now(ZoneId.systemDefault()),
+                subTotal,
+                cartTotal,
+                OrderStatus.PENDING);
         cart.clear();
         return newOrder;
     }

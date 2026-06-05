@@ -21,6 +21,7 @@ public class MenuManager {
                 0. Wyjście
                 """);
     }
+
     public void printPointsMenu(int currentPoints, Map<Integer, Integer> pointsToDiscount) {
         System.out.println("=== REDEEM POINTS ===");
         System.out.println("Your balance: " + currentPoints + " pts\n");

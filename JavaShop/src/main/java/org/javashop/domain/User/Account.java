@@ -21,24 +21,28 @@ public class Account {
     @Setter
     private int points;
     private List<Voucher> vouchersList;
-    public Account(String accountNumber,String ownerName,AccountType type){
-        Validate.notEmpty(accountNumber,"account number must be filled");
-        Validate.notEmpty(ownerName,"Owner name and surname must be filled");
+
+    public Account(String accountNumber, String ownerName, AccountType type) {
+        Validate.notEmpty(accountNumber, "account number must be filled");
+        Validate.notEmpty(ownerName, "Owner name and surname must be filled");
         Validate.notNull(type, "Account type cannot be null");
         this.accountNumber = accountNumber;
         this.ownerName = ownerName;
         this.type = type;
-       this.points = 100;
-       this.vouchersList = new ArrayList<>();
+        this.points = 100;
+        this.vouchersList = new ArrayList<>();
     }
-    public void addVoucherToAccount(@NonNull Voucher voucher){
+
+    public void addVoucherToAccount(@NonNull Voucher voucher) {
         vouchersList.add(voucher);
     }
-    public void removeVoucherFromAccount(@NonNull Voucher voucher){
+
+    public void removeVoucherFromAccount(@NonNull Voucher voucher) {
         vouchersList.remove(voucher);
     }
-    public void removeExpiredOrUsedVouchers(){
-       vouchersList.removeIf( voucher -> voucher.expirationDate().isBefore(LocalDate.now())| voucher.isUsed());
+
+    public void removeExpiredOrUsedVouchers() {
+        vouchersList.removeIf(voucher -> voucher.expirationDate().isBefore(LocalDate.now()) | voucher.isUsed());
     }
 
 }

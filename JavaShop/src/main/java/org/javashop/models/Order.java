@@ -19,6 +19,7 @@ public record Order(Account account,
                     UUID orderID,
                     List<CartItem> productsList,
                     ZonedDateTime dateTime,
+                    BigDecimal subTotal,
                     BigDecimal total,
                     OrderStatus status) implements Savable {
     /**
@@ -31,22 +32,26 @@ public record Order(Account account,
      * @param total        the total
      * @param status       the status
      */
-    public Order{
-        Validate.notNull(account,"Account not known");
-        Validate.notNull(orderID,"Must contain order ID");
-        Validate.notNull(dateTime,"Must contain date and time");
-        Validate.notEmpty(productsList,"Products list is empty");
-        Validate.isTrue(total != null && total.signum() > 0,"Total must not be null nor negative");
+    public Order {
+        Validate.notNull(account, "Account not known");
+        Validate.notNull(orderID, "Must contain order ID");
+        Validate.notNull(dateTime, "Must contain date and time");
+        Validate.notNull(subTotal, "Subtotal cannot be null");
+        Validate.notNull(total, "total cannot be null");
+        Validate.notEmpty(productsList, "Products list is empty");
+        Validate.isTrue( total.signum() > 0, "negative Total");
+        Validate.isTrue(total.compareTo(subTotal) <= 0, "Total cannot be greater than subtotal");
     }
 
     @Override
     public String toString() {
-        return "Order{"+orderID+"}" +
-                "account=" + account + "\n"+
-                ", productsList=" + productsList +"\n"+
-                ", dateTime=" + dateTime +"\n"+
-                ", total=" + total +"\n"+
-                ", status=" + status +"\n";
+        return "Order{" + orderID + "}" +
+                "account=" + account + "\n" +
+                ", productsList=" + productsList + "\n" +
+                ", dateTime=" + dateTime + "\n" +
+                ", SubTotal=" + subTotal + "\n" +
+                ", total=" + total + "\n" +
+                ", status=" + status + "\n";
     }
 
     @Override
@@ -56,6 +61,6 @@ public record Order(Account account,
 
     @Override
     public String fileName() {
-        return "Order"+this.orderID+".txt";
+        return "Order" + this.orderID + ".txt";
     }
 }

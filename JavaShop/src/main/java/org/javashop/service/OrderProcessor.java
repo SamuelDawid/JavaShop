@@ -11,6 +11,7 @@ import org.javashop.models.InvoiceLine;
 import org.javashop.models.Order;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,37 +35,44 @@ public class OrderProcessor {
      * @param order the order
      * @return the invoice
      */
-    public Invoice processOrder(@NonNull Order order){
+    public Invoice processOrder(@NonNull Order order) {
         List<InvoiceLine> adjustedInvoice = new LinkedList<>();
         BigDecimal newTotal = BigDecimal.ZERO;
+
         for (int i = 0; i < order.productsList().size(); i++) {
             Electronics currentProduct = order.productsList().get(i).product();
             int orderedQty = order.productsList().get(i).qty();
             int shippedQty = productManager.decreaseStock(currentProduct.getId(), orderedQty);
 
-                InvoiceLine productLine = new InvoiceLine(currentProduct,orderedQty,shippedQty);
-                adjustedInvoice.add(productLine);
-                newTotal = newTotal.add(currentProduct.getPrice().multiply(BigDecimal.valueOf(shippedQty)));
+            InvoiceLine productLine = new InvoiceLine(currentProduct, orderedQty, shippedQty);
+            adjustedInvoice.add(productLine);
+            newTotal = newTotal.add(currentProduct.getPrice().multiply(BigDecimal.valueOf(shippedQty)));
         }
-        if(newTotal.signum() == 0) throw new OrderProcessingException();
-        String invID = "INV"+order.dateTime().format(DateTimeFormatter.ofPattern("-yyyyMMdd-"))+(counter.getAndIncrement());
+        BigDecimal shippedSubTotal = newTotal;
+        BigDecimal discountRation = order.total().divide(order.subTotal(), 4, RoundingMode.HALF_UP);
+        BigDecimal finalTotal = shippedSubTotal.multiply(discountRation).setScale(2, RoundingMode.HALF_UP);
+        if (newTotal.signum() == 0) throw new OrderProcessingException();
+        String invID = "INV" + order.dateTime().format(DateTimeFormatter.ofPattern("-yyyyMMdd-")) + (counter.getAndIncrement());
         return new Invoice(
                 invID,
-               ZonedDateTime.now(ZoneId.systemDefault()),
+                ZonedDateTime.now(ZoneId.systemDefault()),
                 adjustedInvoice,
-                newTotal,
+                finalTotal,
                 order.account()
         );
     }
+
     @Deprecated(since = "Task14", forRemoval = true)
-    public Future<Invoice> submitOrder(@NonNull Order order){
+    public Future<Invoice> submitOrder(@NonNull Order order) {
         return executorService.submit(() -> processOrder(order));
     }
-    public void shutDown() throws InterruptedException{
+
+    public void shutDown() throws InterruptedException {
         executorService.shutdown();
         executorService.awaitTermination(5, TimeUnit.SECONDS);
     }
-    public CompletableFuture<Invoice> submitOrderAsync(Order order){
+
+    public CompletableFuture<Invoice> submitOrderAsync(Order order) {
         return CompletableFuture.supplyAsync(() -> processOrder(order), executorService);
     }
 }

@@ -46,7 +46,7 @@ public class ShopCLI {
                 case "3" -> showCart();
                 case "4" -> checkout();
                 case "5" -> accountInf();
-                case "6" -> pointsExchange();
+                case "6" -> pointsExchange(account);
                 case "0" -> {
                     System.out.println("Bye!");
                     orderProcessor.shutDown();
@@ -59,7 +59,13 @@ public class ShopCLI {
     private void accountInf(){
         System.out.println(account);
     }
-    private void pointsExchange(){
+    private void pointsExchange(Account account){
+
+            if(account.getType() == AccountType.COMPANY) {
+                System.out.println("Your account has a 7% flat rate discount!");
+                return;
+            }
+
         menuManager.printPointsMenu(account.getPoints(), discountService.getPointsToDiscount());
         System.out.println("Would you like to generate voucher discount? (Always chooses max discount available)(yes/no)");
         String userAnswer = scanner.nextLine();
@@ -142,14 +148,9 @@ public class ShopCLI {
                         account.removeVoucherFromAccount(biggestVoucher.get());
                         cart.setCartTotal(newTotal);
                     }
-
                 return cart;
-
             }
         }
-
-
-
     }
 
 }
