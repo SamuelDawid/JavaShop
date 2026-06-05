@@ -17,7 +17,7 @@ public class FilesHandler {
     public static final Path SAVED_ORDERS_DIRECTORY_PATH = Path.of("data","ORDERS");
 
     /**
-     * Save to file.
+     * Saves SAVABLE object to file
      *
      * @param fileToSave the file to save
      * @param path       the path

@@ -21,7 +21,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The type Order processor.
+ * Processes orders and generates invoices
  */
 @RequiredArgsConstructor
 public class OrderProcessor {
@@ -30,10 +30,13 @@ public class OrderProcessor {
     private final AtomicInteger counter = new AtomicInteger(1);
 
     /**
-     * Process order invoice.
+     * Processes an order synchronously and generates an invoice.
+     * Adjust quantities based on actual stock availability and applies
+     * any discounts from the original order proportionally to the final total.
      *
-     * @param order the order
-     * @return the invoice
+     * @param order the order to process
+     * @return the generated invoice with adjusted quantitites and final price
+     * @throws OrderProcessingException if none of the ordered products could be shipped
      */
     public Invoice processOrder(@NonNull Order order) {
         List<InvoiceLine> adjustedInvoice = new LinkedList<>();
@@ -62,16 +65,33 @@ public class OrderProcessor {
         );
     }
 
+    /**
+     * Submits an order for asynchronous processing using a thread pool.
+     * @param order the order to process
+     * @return a Future containing the generated invoice
+     * @deprecated since Task14, use {@link #submitOrderAsync(Order)} instead, scheduled for removal
+     */
     @Deprecated(since = "Task14", forRemoval = true)
     public Future<Invoice> submitOrder(@NonNull Order order) {
         return executorService.submit(() -> processOrder(order));
     }
 
+    /**
+     * Shuts down the executor service gracefully.
+     * Waits up to 5 seconds for current thread is interrupted while waiting
+     * @throws InterruptedException
+     */
     public void shutDown() throws InterruptedException {
         executorService.shutdown();
         executorService.awaitTermination(5, TimeUnit.SECONDS);
     }
 
+    /**
+     * Submits an order for asynchronous using CompletableFuture.
+     * Preferred over {@link #processOrder(Order)} for non-blocking order handling.
+     * @param order the order to process
+     * @return a CompletableFuture containing the generated invoice
+     */
     public CompletableFuture<Invoice> submitOrderAsync(Order order) {
         return CompletableFuture.supplyAsync(() -> processOrder(order), executorService);
     }
