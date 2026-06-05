@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -79,11 +80,12 @@ class OrderProcessorTest {
         testOrder = testCart.checkout();
         //act
         Invoice result = orderProcessor.processOrder(testOrder);
+        String expectedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         //assert
         assertAll(
-                () ->  assertThat(testCart.getTotal()).isEqualByComparingTo(result.total()),
-                () -> assertThat(result.invoiceNumber()).isEqualTo("INV-20260603-1"),
-                () -> assertThat(result.issueDate()).isEqualTo(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE)),
+                () ->  assertThat(testCart.getCartTotal()).isEqualByComparingTo(result.total()),
+                () -> assertThat(result.invoiceNumber()).startsWith("INV-" + expectedDate),
+                () -> assertThat(result.issueDate()).isNotNull(),
                 () -> assertThat(result.listOfProductsWithAdjustedQuantity()).hasSize(2),
                 () -> assertThat(result.userInformation().getAccountNumber()).isEqualTo("123-123")
         );

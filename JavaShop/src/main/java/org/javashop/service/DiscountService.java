@@ -11,7 +11,7 @@ import org.javashop.domain.User.Account;
 import org.javashop.enums.AccountType;
 import org.javashop.interfaces.DiscountStrategy;
 import org.javashop.models.Voucher;
-import org.javashop.repo.InMemoryVoucherRepository;
+import org.javashop.repo.VoucherRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public class DiscountService implements DiscountStrategy {
-    private final InMemoryVoucherRepository voucherRepository;
+    private final VoucherRepository voucherRepository;
 
     @Override
     public BigDecimal applyCompany(@NonNull BigDecimal basePrice,@NonNull AccountType type) {
@@ -32,8 +32,9 @@ public class DiscountService implements DiscountStrategy {
     @Override
     public BigDecimal applyVoucher(@NonNull BigDecimal basePrice,@NonNull Voucher voucher) {
         if(!voucherRepository.validateVoucher(voucher)) throw new InvalidVoucherException();
-        BigDecimal discount = BigDecimal.valueOf(voucher.percentage()).divide(new BigDecimal(100),RoundingMode.UNNECESSARY);
-        return basePrice.multiply(discount).setScale(2,RoundingMode.HALF_UP);
+        BigDecimal discount = BigDecimal.valueOf(voucher.percentage());
+        BigDecimal discountAmount = basePrice.divide(discount,RoundingMode.HALF_EVEN);
+        return basePrice.subtract(discountAmount);
     }
 
     @Override
@@ -58,5 +59,8 @@ public class DiscountService implements DiscountStrategy {
                 .map(Map.Entry::getKey)
                 .findFirst()
                 .orElseThrow(() -> new NoSuchDiscountException("No such discount: " + discountPercent));
+    }
+    public void addVoucherToRepository(@NonNull Voucher voucher){
+        voucherRepository.addVoucher(voucher);
     }
 }

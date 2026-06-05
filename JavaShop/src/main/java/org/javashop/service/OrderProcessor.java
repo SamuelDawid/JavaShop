@@ -34,7 +34,7 @@ public class OrderProcessor {
      * @param order the order
      * @return the invoice
      */
-    Invoice processOrder(@NonNull Order order){
+    public Invoice processOrder(@NonNull Order order){
         List<InvoiceLine> adjustedInvoice = new LinkedList<>();
         BigDecimal newTotal = BigDecimal.ZERO;
         for (int i = 0; i < order.productsList().size(); i++) {
@@ -56,7 +56,7 @@ public class OrderProcessor {
                 order.account()
         );
     }
-
+    @Deprecated(since = "Task14", forRemoval = true)
     public Future<Invoice> submitOrder(@NonNull Order order){
         return executorService.submit(() -> processOrder(order));
     }

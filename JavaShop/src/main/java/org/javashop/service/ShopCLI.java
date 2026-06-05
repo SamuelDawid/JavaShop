@@ -1,9 +1,11 @@
 package org.javashop.service;
 
 import lombok.RequiredArgsConstructor;
+import org.javashop.Exceptions.EmptyCartException;
 import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Electronics;
+import org.javashop.enums.AccountType;
 import org.javashop.menu.MenuManager;
 import org.javashop.models.Cart;
 import org.javashop.models.CartItem;
@@ -11,6 +13,10 @@ import org.javashop.models.Order;
 import org.javashop.models.Voucher;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.Scanner;
 
 
@@ -63,6 +69,7 @@ public class ShopCLI {
             Voucher newVoucher = discountService.exchangePoints(account, pointsToDeduct);
             account.setPoints(account.getPoints() - pointsToDeduct);
             account.addVoucherToAccount(newVoucher);
+            discountService.addVoucherToRepository(newVoucher);
             System.out.println(newVoucher);
         }else System.out.println("Ok, back to main");
     }
@@ -94,24 +101,56 @@ public class ShopCLI {
         for (CartItem e : cart.getCart())
             System.out.println(e);
 
-        System.out.println("Total:" + cart.getTotal());
+        System.out.println("Total:" + cart.getCartTotal());
     }
 
     private void checkout() {
-            Order order = cart.checkout();
-             orderProcessor.submitOrderAsync(order)
-                    .thenAccept(inv -> {
-                        try {
-                            FilesHandler.saveToFile(inv,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
-                            FilesHandler.saveToFile(order,FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
-                            System.out.println("Thank you for your order!");
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }).exceptionally(e -> {
-                        System.out.println("Error: " + e.getMessage());
-                        return null;
-                    });
+        try {
+        Order order = discountHandler(cart, account).checkout();
+        orderProcessor.submitOrderAsync(order)
+                .thenAccept(inv -> {
+                    try {
+                        FilesHandler.saveToFile(inv, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
+                        FilesHandler.saveToFile(order, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
+                        System.out.println("Thank you for your order!");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).exceptionally(e -> {
+                    System.out.println("Error: " + e.getMessage());
+                    return null;
+                });
+    } catch (EmptyCartException e) {
+            System.out.println(e.getMessage());
+        }
     }
+
+    private Cart discountHandler(Cart cart,Account account){
+        account.removeExpiredOrUsedVouchers();
+        if(account.getType() == AccountType.COMPANY){
+            cart.setCartTotal(discountService.applyCompany(cart.getCartTotal(),account.getType()));
+            return cart;
+        }else {
+            if(account.getVouchersList().isEmpty())
+            {
+                System.out.println("No vouchers Available,generating your Invoice");
+                return cart;
+            }else {
+                    Optional<Voucher> biggestVoucher = account.getVouchersList().stream().max(Comparator.comparingInt(Voucher::percentage));
+                    if(biggestVoucher.isPresent()){
+                        BigDecimal newTotal = discountService.applyVoucher(cart.getCartTotal(), biggestVoucher.get());
+                        account.removeVoucherFromAccount(biggestVoucher.get());
+                        cart.setCartTotal(newTotal);
+                    }
+
+                return cart;
+
+            }
+        }
+
+
+
+    }
+
 }
 

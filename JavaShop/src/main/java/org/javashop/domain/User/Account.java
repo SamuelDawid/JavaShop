@@ -6,7 +6,9 @@ import org.apache.commons.lang3.Validate;
 import org.javashop.enums.AccountType;
 import org.javashop.models.Voucher;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @ToString
@@ -22,7 +24,7 @@ public class Account {
     public Account(String accountNumber,String ownerName,AccountType type){
         Validate.notEmpty(accountNumber,"account number must be filled");
         Validate.notEmpty(ownerName,"Owner name and surname must be filled");
-        EnumUtils.isValidEnum(AccountType.class,type.name());
+        Validate.notNull(type, "Account type cannot be null");
         this.accountNumber = accountNumber;
         this.ownerName = ownerName;
         this.type = type;
@@ -35,4 +37,8 @@ public class Account {
     public void removeVoucherFromAccount(@NonNull Voucher voucher){
         vouchersList.remove(voucher);
     }
+    public void removeExpiredOrUsedVouchers(){
+       vouchersList.removeIf( voucher -> voucher.expirationDate().isBefore(LocalDate.now())| voucher.isUsed());
+    }
+
 }

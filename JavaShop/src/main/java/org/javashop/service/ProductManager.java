@@ -2,9 +2,11 @@ package org.javashop.service;
 
 
 import lombok.NonNull;
+import org.javashop.Exceptions.ProductAlreadyExists;
 import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.repo.InMemoryProductRepository;
+import org.javashop.repo.ProductsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +14,9 @@ import java.util.Optional;
 
 
 public class ProductManager {
-    private final InMemoryProductRepository productsRepository;
+    private final ProductsRepository productsRepository;
 
-    public ProductManager(InMemoryProductRepository productsRepository) {
+    public ProductManager(ProductsRepository productsRepository) {
         this.productsRepository = productsRepository;
     }
 
@@ -38,7 +40,8 @@ public class ProductManager {
      * @throws NullPointerException if provided product is null
      */
     public void addProduct(@NonNull Electronics product){
-            productsRepository.save(product);
+        if(productsRepository.findAll().contains(product)) throw new ProductAlreadyExists(product);
+        productsRepository.save(product);
     }
 
     /**

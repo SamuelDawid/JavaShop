@@ -22,19 +22,18 @@ public class InMemoryVoucherRepository implements VoucherRepository{
             250, 25
     );
     private static final TemporalAmount VOUCHER_MAX_DAYS = Period.ofDays(7);
-    @Override
     public boolean validateVoucher(@NonNull Voucher voucher) {
         if(!listOfVouchers.containsKey(voucher)) throw new VoucherNotFoundException();
-
+        if(voucher.expirationDate().isBefore(LocalDate.now())) return false;
         return listOfVouchers.get(voucher);
     }
-    public boolean addVoucher(@NonNull Voucher voucher){
+    public void addVoucher(@NonNull Voucher voucher){
         if(listOfVouchers.containsKey(voucher)) throw new VoucherAlreadyExistsException();
-        return Boolean.TRUE.equals(listOfVouchers.putIfAbsent(voucher, true));
+        listOfVouchers.putIfAbsent(voucher, true);
     }
     public boolean deleteVoucher(@NonNull Voucher voucher){
         if(!listOfVouchers.containsKey(voucher)) throw new VoucherNotFoundException();
-        return listOfVouchers.remove(voucher) == null;
+        return listOfVouchers.remove(voucher) != null;
     }
     public Optional<Voucher> findVoucher(String voucherName){
       return listOfVouchers.keySet().stream().filter(voucher -> voucher.voucherName().equals(voucherName)).findAny();
