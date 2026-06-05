@@ -1,6 +1,0 @@
-Order{d717c75c-04db-4998-b0da-6ff6fbca49c3}account=Account(accountNumber=123, ownerName=Samuel K, type=NORMAL, points=0, vouchersList=[])
-, productsList=[Product[PC-1] Gaming Beast 3999.99 zł (2)]
-, dateTime=2026-06-05T13:23:24.909720600+02:00[Europe/Warsaw]
-, SubTotal=7999.98
-, total=7199.98
-, status=PENDING

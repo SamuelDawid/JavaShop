@@ -32,9 +32,10 @@ public class DiscountService implements DiscountStrategy {
     @Override
     public BigDecimal applyVoucher(@NonNull BigDecimal basePrice,@NonNull Voucher voucher) {
         if(!voucherRepository.validateVoucher(voucher)) throw new InvalidVoucherException();
-        BigDecimal discount = BigDecimal.valueOf(voucher.percentage());
-        BigDecimal discountAmount = basePrice.divide(discount,RoundingMode.HALF_EVEN);
-        return basePrice.subtract(discountAmount);
+        BigDecimal discountFraction = BigDecimal.valueOf(voucher.percentage())
+                .divide(new BigDecimal(100), 4, RoundingMode.HALF_UP);
+        BigDecimal discountAmount = basePrice.multiply(discountFraction);
+        return basePrice.subtract(discountAmount).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class Account {
     }
 
     public void removeExpiredOrUsedVouchers() {
-        vouchersList.removeIf(voucher -> voucher.expirationDate().isBefore(LocalDate.now()) | voucher.isUsed());
+        vouchersList.removeIf(voucher -> voucher.expirationDate().isBefore(LocalDate.now()) || voucher.isUsed());
     }
 
 }

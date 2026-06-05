@@ -60,7 +60,7 @@ class DiscountServiceTest {
     void shouldApplyVoucher() {
         when(repository.validateVoucher(testVoucher)).thenReturn(true);
         BigDecimal result = discountService.applyVoucher(basePrice, testVoucher);
-        assertThat(result).isEqualByComparingTo("113");
+        assertThat(result).isEqualByComparingTo("112.5");
     }
 
     @Test
@@ -96,7 +96,47 @@ class DiscountServiceTest {
         discountService.addVoucherToRepository(testVoucher);
         verify(repository).addVoucher(testVoucher);
     }
+    @Nested class AccountTest{
+        Account testAcc = new Account("111-111","Samuel K",AccountType.NORMAL);
+        @Test
+        void shouldAddVoucherToAccount(){
+            testAcc.addVoucherToAccount(testVoucher);
 
+            assertThat(testAcc.getVouchersList()).hasSize(1);
+            assertThat(testAcc.getVouchersList().getFirst()).isEqualTo(testVoucher);
+        }
+        @Test
+        void shouldRemoveVoucherFromAccount(){
+            testAcc.addVoucherToAccount(testVoucher);
+            assertThat(testAcc.getVouchersList()).hasSize(1);
+            testAcc.removeVoucherFromAccount(testVoucher);
+            assertThat(testAcc.getVouchersList()).isEmpty();
+        }
+        @Test
+        void shouldRemoveExpiredOrUsedVouchers() {
+            // Arrange
+            LocalDate creationDate = LocalDate.of(2026, 5, 1);
+            LocalDate expiryDate = LocalDate.of(2026, 5, 5);
+            LocalDate usedExpiry = LocalDate.of(2026, 5, 10);
+            LocalDate futureDate = LocalDate.of(2026, 5, 15);
+        //ACT
+            try (MockedStatic<LocalDate> mockedDate = Mockito.mockStatic(LocalDate.class, Mockito.CALLS_REAL_METHODS)) {
+                mockedDate.when(LocalDate::now).thenReturn(creationDate);
+
+                Voucher willExpire = new Voucher("willExpire", expiryDate, 10);
+                Voucher usedOne = new Voucher("used", usedExpiry, 10, true);
+                testAcc.addVoucherToAccount(willExpire);
+                testAcc.addVoucherToAccount(usedOne);
+                assertThat(testAcc.getVouchersList()).hasSize(2);
+
+                // change mock expiration day
+                mockedDate.when(LocalDate::now).thenReturn(futureDate);
+
+                testAcc.removeExpiredOrUsedVouchers();
+                assertThat(testAcc.getVouchersList()).isEmpty();
+            }
+        }
+    }
     @Nested
     class VoucherRepositoryTest {
 

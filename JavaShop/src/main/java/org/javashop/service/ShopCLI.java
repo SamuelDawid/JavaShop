@@ -71,6 +71,10 @@ public class ShopCLI {
         String userAnswer = scanner.nextLine();
         if(userAnswer.equalsIgnoreCase("yes")){
             int maxDiscount = discountService.getMaxAvailableDiscount(account.getPoints());
+            if(maxDiscount == 0) {
+                System.out.println("Not enough points to redeem!");
+                return;
+            }
             int pointsToDeduct = discountService.getPointsForDiscount(maxDiscount);
             Voucher newVoucher = discountService.exchangePoints(account, pointsToDeduct);
             account.setPoints(account.getPoints() - pointsToDeduct);

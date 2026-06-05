@@ -64,7 +64,8 @@ public class Cart {
     public boolean removeFromCart(@NonNull Electronics product)
     {
         CartItem itemToFind = cart.stream().filter( cartItem -> cartItem.product().equals(product)).findAny().orElseThrow(() -> new ProductNotFoundException(product.getId()));
-       return cart.remove(itemToFind);
+       setCartTotal(calculateTotal());
+        return cart.remove(itemToFind);
     }
 
     /**
