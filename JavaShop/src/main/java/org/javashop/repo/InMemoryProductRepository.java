@@ -26,12 +26,10 @@ public class InMemoryProductRepository implements ProductsRepository{
     public boolean save( @NonNull Electronics product) {
         return electronicsList.putIfAbsent(product.getId(), product) == null;
     }
-
     @Override
     public void update(String id, @NonNull Electronics newProduct) {
          electronicsList.replace(id,newProduct);
     }
-
     @Override
     public boolean delete(String productId) {
         return electronicsList.remove(productId) != null;
