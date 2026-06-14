@@ -1,10 +1,6 @@
 package org.javashop.models;
 
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.Validate;
 
@@ -16,7 +12,7 @@ import java.math.RoundingMode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Electronics {
     @EqualsAndHashCode.Include
-    private final String Id;
+    private String Id;
     private String name;
     @Setter
     private BigDecimal price;
