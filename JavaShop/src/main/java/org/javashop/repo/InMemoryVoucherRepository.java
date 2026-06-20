@@ -13,13 +13,13 @@ import java.time.temporal.TemporalAmount;
 import java.util.*;
 
 /**
- * In-memory implementation of {@link VoucherRepository} backed by a HashMap
+ * In-memory implementation of {@link VoucherRepository} backed by a HashSet
  */
 public class InMemoryVoucherRepository implements VoucherRepository {
     /**
      * The List of vouchers available.
      */
-    Map<Voucher, Boolean> listOfVouchers = new HashMap<>();
+    Set<Voucher> listOfVouchers = new HashSet<>();
     private static final Map<Integer, Integer> POINTS_TO_DISCOUNT = Map.of(
             100, 10,
             150, 15,
@@ -36,9 +36,8 @@ public class InMemoryVoucherRepository implements VoucherRepository {
      * @throws VoucherNotFoundException if the voucher does not exist in the repository
      */
     public boolean validateVoucher(@NonNull Voucher voucher) {
-        if (!listOfVouchers.containsKey(voucher)) throw new VoucherNotFoundException();
-        if (voucher.expirationDate().isBefore(LocalDate.now())) return false;
-        return listOfVouchers.get(voucher);
+        if (!listOfVouchers.contains(voucher)) throw new VoucherNotFoundException();
+        return !voucher.expirationDate().isBefore(LocalDate.now());
     }
 
     /**
@@ -48,8 +47,8 @@ public class InMemoryVoucherRepository implements VoucherRepository {
      * @throws VoucherAlreadyExistsException if voucher already exists in the repository
      */
     public void addVoucher(@NonNull Voucher voucher) {
-        if (listOfVouchers.containsKey(voucher)) throw new VoucherAlreadyExistsException();
-        listOfVouchers.putIfAbsent(voucher, true);
+        if (listOfVouchers.contains(voucher)) throw new VoucherAlreadyExistsException();
+        listOfVouchers.add(voucher);
     }
 
     /**
@@ -60,8 +59,8 @@ public class InMemoryVoucherRepository implements VoucherRepository {
      * @throws VoucherNotFoundException if voucher was not found in the repository
      */
     public boolean deleteVoucher(@NonNull Voucher voucher) {
-        if (!listOfVouchers.containsKey(voucher)) throw new VoucherNotFoundException();
-        return listOfVouchers.remove(voucher) != null;
+        if (!listOfVouchers.contains(voucher)) throw new VoucherNotFoundException();
+        return listOfVouchers.remove(voucher);
     }
 
     /**
@@ -71,7 +70,7 @@ public class InMemoryVoucherRepository implements VoucherRepository {
      * @return optional of voucher if found, returns Optional.empty() if not found in the repository
      */
     public Optional<Voucher> findVoucher(String voucherName) {
-        return listOfVouchers.keySet().stream().filter(voucher -> voucher.voucherName().equals(voucherName)).findAny();
+        return listOfVouchers.stream().filter(voucher -> voucher.voucherName().equals(voucherName)).findAny();
     }
 
     /**

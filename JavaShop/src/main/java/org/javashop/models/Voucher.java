@@ -28,4 +28,7 @@ public record Voucher(String voucherName,
     public String toString() {
         return "Voucher: " + voucherName + ", expirationDate: " + expirationDate + ", percentage:" + percentage;
     }
+    public Voucher markUsed(){
+        return new Voucher(voucherName, expirationDate, percentage, true);
+    }
 }
