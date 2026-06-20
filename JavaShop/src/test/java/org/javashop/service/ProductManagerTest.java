@@ -71,22 +71,19 @@ class ProductManagerTest {
 
     @Test
     void ShouldDecreesStockSuccessfully() {
-        when(productRepository.findById(samsungGalaxy.getId())).thenReturn(Optional.of(samsungGalaxy));
+        when(productRepository.decreaseStock(samsungGalaxy.getId(),3)).thenReturn(3);
         int result = productManager.decreaseStock(samsungGalaxy.getId(), 3);
         assertThat(result).isEqualTo(3);
-        assertThat(samsungGalaxy.getQuantity()).isEqualTo(2);
     }
 
     @Test
     void ShouldReturnZeroWhenDecreesStockByMaxQtyOrMore() {
-        when(productRepository.findById(samsungGalaxy.getId())).thenReturn(Optional.of(samsungGalaxy));
-        when(productRepository.findById(alienWereAurora.getId())).thenReturn(Optional.of(alienWereAurora));
+        when(productRepository.decreaseStock(samsungGalaxy.getId(),5)).thenReturn(5);
+        when(productRepository.decreaseStock(alienWereAurora.getId(),20)).thenReturn(2);
         int result = productManager.decreaseStock(samsungGalaxy.getId(), 5);
         int resultTwo = productManager.decreaseStock(alienWereAurora.getId(), 20);
         assertThat(result).isEqualTo(5);
         assertThat(resultTwo).isEqualTo(2);
-        assertThat(samsungGalaxy.getQuantity()).isEqualTo(0);
-        assertThat(alienWereAurora.getQuantity()).isEqualTo(0);
     }
 
     @Nested
