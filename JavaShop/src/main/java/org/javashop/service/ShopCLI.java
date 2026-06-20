@@ -6,9 +6,11 @@ import org.javashop.Exceptions.EmptyCartException;
 import org.javashop.Exceptions.InvalidQuantityException;
 import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.Exceptions.UnavailableProducts;
+import org.javashop.discount.DiscountPolicyFactory;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.enums.AccountType;
+import org.javashop.interfaces.DiscountPolicy;
 import org.javashop.interfaces.Savable;
 import org.javashop.menu.MenuManager;
 import org.javashop.models.Cart;
@@ -17,9 +19,6 @@ import org.javashop.models.Order;
 import org.javashop.models.Voucher;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.Optional;
 import java.util.Scanner;
 
 
@@ -38,6 +37,7 @@ public class ShopCLI {
     private final Account account;
     private final Scanner scanner = new Scanner(System.in);
     private final MenuManager menuManager = new MenuManager();
+    private final DiscountPolicyFactory discountPolicyFactory;
 
     /**
      * Starts the main application loop.
@@ -150,27 +150,10 @@ public class ShopCLI {
 
     private Cart discountHandler(Cart cart, Account account) {
         account.removeExpiredOrUsedVouchers();
-        if (account.getType() == AccountType.COMPANY) {
-            cart.setCartTotal(discountService.applyCompany(cart.getCartTotal(), account.getType()));
-            return cart;
-        } else {
-            if (account.getVouchersList().isEmpty()) {
-                System.out.println("No vouchers Available,generating your Invoice");
-                return cart;
-            } else {
-                Optional<Voucher> biggestVoucher = findBiggestVoucher();
-                if (biggestVoucher.isPresent()) {
-                    BigDecimal newTotal = discountService.applyVoucher(cart.getCartTotal(), biggestVoucher.get());
-                    account.removeVoucherFromAccount(biggestVoucher.get());
-                    cart.setCartTotal(newTotal);
-                }
-                return cart;
-            }
-        }
-    }
-
-    private Optional<Voucher> findBiggestVoucher() {
-        return account.getVouchersList().stream().max(Comparator.comparingInt(Voucher::percentage));
+        DiscountPolicy policy = discountPolicyFactory.forAccount(account);
+        cart.setCartTotal(policy.apply(cart, account));
+        return cart;
     }
 }
+
 

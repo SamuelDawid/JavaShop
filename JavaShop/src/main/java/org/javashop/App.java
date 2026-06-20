@@ -1,6 +1,7 @@
 package org.javashop;
 
 
+import org.javashop.discount.DiscountPolicyFactory;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Computer;
 import org.javashop.domain.resources.SmartPhone;
@@ -29,6 +30,7 @@ public class App {
         ProductManager manager = new ProductManager(repository);
         OrderProcessor orderProcessor = new OrderProcessor(manager);
         DiscountService discountService = new DiscountService(voucherRepository);
+        DiscountPolicyFactory discountPolicyFactory = DiscountPolicyFactory.create(discountService);
         Account account = new Account("123", "Samuel K", AccountType.NORMAL);
         Cart cart = new Cart(account);
         //regionProducts
@@ -45,8 +47,6 @@ public class App {
                         BATTERY.mAh_5000, Colour.GREEN)));
 
         //endregion
-        new ShopCLI(manager, cart, orderProcessor, discountService, account).start();
-
-
+        new ShopCLI(manager, cart, orderProcessor, discountService, account, discountPolicyFactory).start();
     }
 }
