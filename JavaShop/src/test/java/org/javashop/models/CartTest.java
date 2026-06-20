@@ -27,7 +27,6 @@ import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CartTest {
@@ -82,7 +81,8 @@ class CartTest {
     void shouldRemoveFromCartSuccessfully() {
         cart.addToCart(iPhone, 7);
         // Act + assert
-        assertThat(cart.removeFromCart(iPhone)).isTrue();
+        cart.removeFromCart(iPhone);
+        assertThat(cart.getCart()).hasSize(0);
     }
 
     @Test
@@ -114,6 +114,15 @@ class CartTest {
         cart.addToCart(office, 11);
         BigDecimal total = new BigDecimal("69299.75");
         assertThat(cart.getCartTotal()).isEqualByComparingTo(total);
+    }
+    @Test
+    void shouldUpdateCardTotal(){
+        cart.addToCart(iPhone,2);
+        cart.addToCart(samsung,1);
+        BigDecimal total = cart.getCartTotal();
+        cart.removeFromCart(iPhone);
+        BigDecimal newTotal = cart.getCartTotal();
+        assertThat(total).isNotEqualTo(newTotal);
     }
 }
 

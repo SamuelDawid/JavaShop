@@ -59,13 +59,12 @@ public class Cart {
      * Removes a product from the cart.
      *
      * @param product the product
-     * @return true if the product was successfully removed
      * @throws ProductNotFoundException if the product is not in the cart
      */
-    public boolean removeFromCart(@NonNull Electronics product) {
+    public void removeFromCart(@NonNull Electronics product) {
         CartItem itemToFind = cart.stream().filter(cartItem -> cartItem.product().equals(product)).findAny().orElseThrow(() -> new ProductNotFoundException(product.getId()));
+        cart.remove(itemToFind);
         setCartTotal(calculateTotal());
-        return cart.remove(itemToFind);
     }
 
     /**
