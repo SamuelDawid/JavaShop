@@ -1,8 +1,11 @@
 package org.javashop.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.javashop.Exceptions.EmptyCartException;
+import org.javashop.Exceptions.InvalidQuantityException;
 import org.javashop.Exceptions.ProductNotFoundException;
+import org.javashop.Exceptions.UnavailableProducts;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.enums.AccountType;
@@ -24,6 +27,7 @@ import java.util.Scanner;
  * Handles user interaction for browsing products, managing cart,
  * checkout, account info, and loyalty points exchange.
  */
+@Slf4j
 @RequiredArgsConstructor
 public class ShopCLI {
     private final ProductManager productManager;
@@ -103,8 +107,8 @@ public class ShopCLI {
                 Electronics product = productManager.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
                 cart.addToCart(product, Integer.parseInt(howMany));
                 return;
-            } catch (NumberFormatException | ProductNotFoundException e) {
-                System.out.println(e.getMessage());
+            } catch (NumberFormatException | ProductNotFoundException | UnavailableProducts | InvalidQuantityException e) {
+                log.error("failed: ", e);
             }
 
         }
