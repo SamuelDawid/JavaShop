@@ -9,6 +9,7 @@ import org.javashop.Exceptions.UnavailableProducts;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.enums.AccountType;
+import org.javashop.interfaces.Savable;
 import org.javashop.menu.MenuManager;
 import org.javashop.models.Cart;
 import org.javashop.models.CartItem;
@@ -93,8 +94,8 @@ public class ShopCLI {
     }
 
     private void showProducts() {
-        for (String s : productManager.returnAllProducts())
-            System.out.println(s);
+        for (String item : productManager.returnAllProducts())
+            System.out.println(item);
     }
 
     private void addToCart() {
@@ -107,19 +108,18 @@ public class ShopCLI {
                 Electronics product = productManager.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
                 cart.addToCart(product, Integer.parseInt(howMany));
                 return;
-            } catch (NumberFormatException | ProductNotFoundException | UnavailableProducts | InvalidQuantityException e) {
+            } catch (NumberFormatException | ProductNotFoundException | UnavailableProducts |
+                     InvalidQuantityException e) {
                 log.error("failed: ", e);
             }
-
         }
-
     }
 
     private void showCart() {
         System.out.println("Your cart: ");
-        for (CartItem e : cart.getCart())
-            System.out.println(e);
-
+        for (CartItem item : cart.getCart()) {
+            System.out.println(item);
+        }
         System.out.println("Total:" + cart.getCartTotal());
     }
 
@@ -128,19 +128,23 @@ public class ShopCLI {
             Order order = discountHandler(cart, account).checkout();
             orderProcessor.submitOrderAsync(order)
                     .thenAccept(inv -> {
-                        try {
-                            FilesHandler.saveToFile(inv, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
-                            FilesHandler.saveToFile(order, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
-                            System.out.println("Thank you for your order!");
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        saveFiles(inv, order);
+                        System.out.println("Thank you for your order!");
                     }).exceptionally(e -> {
-                        System.out.println("Error: " + e.getMessage());
+                        log.error("Order checkout failed", e);
                         return null;
                     });
         } catch (EmptyCartException e) {
-            System.out.println(e.getMessage());
+            log.error("checkout failed: ", e);
+        }
+    }
+
+    private void saveFiles(Savable inv, Savable order) {
+        try {
+            FilesHandler.saveToFile(inv, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
+            FilesHandler.saveToFile(order, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
+        } catch (IOException e) {
+            log.error("Saving files failed", e);
         }
     }
 
