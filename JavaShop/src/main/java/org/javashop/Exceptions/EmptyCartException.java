@@ -1,0 +1,7 @@
+package org.javashop.Exceptions;
+
+public class EmptyCartException extends RuntimeException {
+    public EmptyCartException() {
+        super("Cart is empty, can not checkout");
+    }
+}

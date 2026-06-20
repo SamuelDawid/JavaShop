@@ -1,28 +1,35 @@
-package org.javashop.models;
+package org.javashop.domain.resources;
 
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.Validate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * The type Electronics.
+ */
 @Getter
 @SuperBuilder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Electronics {
     @EqualsAndHashCode.Include
-    private final String Id;
+    private String Id;
     private String name;
     @Setter
     private BigDecimal price;
     @Setter
     private int quantity;
 
+    /**
+     * Instantiates a new Electronics.
+     *
+     * @param id       the id
+     * @param name     the name
+     * @param price    the price
+     * @param quantity the quantity
+     */
     public Electronics (String id,String name, BigDecimal price, int quantity) {
         Validate.notBlank(name,"Name can not be blank");
         Validate.notBlank(id,"Id can not be blank");
@@ -37,8 +44,14 @@ public class Electronics {
 
     @Override
     public String toString() {
-        return "Product[" + Id + "] " + name + price + " zł " +"("+quantity+")" ;
+        return "Product[" + Id + "] " + name +" "+ price + " zł " +"("+quantity+")" ;
     }
+
+    /**
+     * Is available boolean.
+     *
+     * @return the boolean
+     */
     public boolean isAvailable(){
         return this.quantity > 0;
     }
