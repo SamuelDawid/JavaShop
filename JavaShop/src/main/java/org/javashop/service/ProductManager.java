@@ -23,11 +23,12 @@ public class ProductManager {
     /**
      * Adds all Products from the provided list to the repository.
      * Duplicate products (same iD) are silently ignored.
+     *
      * @param list list of products
      * @throws NullPointerException if list is null
      */
-    public void addAllProducts(@NonNull List<Electronics> list){
-        if(!list.isEmpty()){
+    public void addAllProducts(@NonNull List<Electronics> list) {
+        if (!list.isEmpty()) {
             for (Electronics e : list)
                 productsRepository.save(e);
         }
@@ -36,52 +37,57 @@ public class ProductManager {
     /**
      * Adds single Product provided to the repository
      * Duplicate products (same ID) are silently ignored.
+     *
      * @param product provided Product
      * @throws NullPointerException if provided product is null
      */
-    public void addProduct(@NonNull Electronics product){
-        if(productsRepository.findAll().contains(product)) throw new ProductAlreadyExists(product);
+    public void addProduct(@NonNull Electronics product) {
+        if (productsRepository.findAll().contains(product)) throw new ProductAlreadyExists(product);
         productsRepository.save(product);
     }
 
     /**
      * Replaces an existing product in the repository with the provided product.
-     * @param id the ID of the product to update
+     *
+     * @param id      the ID of the product to update
      * @param product the new product data to replace the existing one
      * @throws ProductNotFoundException if no product exists with the given ID
-     * @throws NullPointerException if product is null
+     * @throws NullPointerException     if product is null
      */
-    public void modify(String id,@NonNull Electronics product){
+    public void modify(String id, @NonNull Electronics product) {
         productsRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         productsRepository.update(id, product);
     }
+
     /**
-     *Decreases the stock quantity of a product by the requested amount.
+     * Decreases the stock quantity of a product by the requested amount.
      * If requested quantity exceeds available stock. ships only what is available.
-     * @param id the product iD
+     *
+     * @param id           the product iD
      * @param requestedQty the quantity requested by the customer
      * @return the actual quantity shipped
-     * @throws  ProductNotFoundException if no product exists with the given ID
+     * @throws ProductNotFoundException if no product exists with the given ID
      */
-    public int decreaseStock(String id, int requestedQty){
+    public int decreaseStock(String id, int requestedQty) {
         Electronics product = productsRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         int shippedQty = Math.min(requestedQty, product.getQuantity());
         int qtyLeft = product.getQuantity() - requestedQty;
-        if(qtyLeft < 0)
+        if (qtyLeft < 0)
             product.setQuantity(0);
         else
             product.setQuantity(qtyLeft);
-        productsRepository.update(id,product);
+        productsRepository.update(id, product);
         return shippedQty;
     }
 
     /**
      * Returns a list of all Products available in the repository as a String
+     *
      * @return nicely formated list of products as a description
      */
-    public List<String> returnAllProducts(){
+    public List<String> returnAllProducts() {
         List<String> listToReturn = new ArrayList<>();
-        for (Electronics product : productsRepository.findAll()){
+        for (Electronics product : productsRepository.findAll()) {
             listToReturn.add(product.toString());
         }
         return listToReturn;
@@ -90,20 +96,22 @@ public class ProductManager {
     /**
      * Returns Optional of a product from repository.
      * If no product found returns Optional.empty()
+     *
      * @param id the ID of a product to find
      * @return Optional of a product
      */
-    public Optional<Electronics> findById(String id){
+    public Optional<Electronics> findById(String id) {
         return productsRepository.findById(id);
     }
 
     /**
      * Return true if a product with provided ID was successfully deleted from repository
      * If not method will return false
+     *
      * @param id the ID of product to delete
      * @return true if deleted successfully, false otherwise
      */
-    public boolean delete(String id){
+    public boolean delete(String id) {
         return productsRepository.delete(id);
     }
 }

@@ -28,14 +28,15 @@ public class DiscountService implements DiscountStrategy {
     /**
      * Applies a 7% discount for company accounts.
      * Throws an exception if the account type is not COMPANY
+     *
      * @param basePrice the original price before discount
-     * @param type the account type
+     * @param type      the account type
      * @return the price after applying company discount
-     * @throws  OnlyCompanyAccountDiscountException if account type is not COMPANY
+     * @throws OnlyCompanyAccountDiscountException if account type is not COMPANY
      */
     @Override
-    public BigDecimal applyCompany(@NonNull BigDecimal basePrice,@NonNull AccountType type) {
-        if(type != AccountType.COMPANY) throw new OnlyCompanyAccountDiscountException();
+    public BigDecimal applyCompany(@NonNull BigDecimal basePrice, @NonNull AccountType type) {
+        if (type != AccountType.COMPANY) throw new OnlyCompanyAccountDiscountException();
         BigDecimal discount = new BigDecimal("0.93");
         return basePrice.multiply(discount).setScale(2, RoundingMode.HALF_UP);
     }
@@ -43,14 +44,15 @@ public class DiscountService implements DiscountStrategy {
     /**
      * Applies voucher discount to the base price.
      * Validates the voucher before applying the discount
+     *
      * @param basePrice the original price before discount
-     * @param voucher the voucher to apply
+     * @param voucher   the voucher to apply
      * @return the price after applying the voucher discount
      * @throws InvalidVoucherException if the voucher is invalid or expired
      */
     @Override
-    public BigDecimal applyVoucher(@NonNull BigDecimal basePrice,@NonNull Voucher voucher) {
-        if(!voucherRepository.validateVoucher(voucher)) throw new InvalidVoucherException();
+    public BigDecimal applyVoucher(@NonNull BigDecimal basePrice, @NonNull Voucher voucher) {
+        if (!voucherRepository.validateVoucher(voucher)) throw new InvalidVoucherException();
         BigDecimal discountFraction = BigDecimal.valueOf(voucher.percentage())
                 .divide(new BigDecimal(100), 4, RoundingMode.HALF_UP);
         BigDecimal discountAmount = basePrice.multiply(discountFraction);
@@ -61,17 +63,18 @@ public class DiscountService implements DiscountStrategy {
      * Exchanges loyalty points for a voucher.
      * Not available for company accounts
      * Validates the points amount.
+     *
      * @param account the account exchanging points
-     * @param points the number of points to exchange
+     * @param points  the number of points to exchange
      * @return the generated voucher
-     * @throws IllegalArgumentException if points are negative or zero
-     * @throws NotAvailableForCompanyAccountsException if the account type is COMPANY
+     * @throws IllegalArgumentException                         if points are negative or zero
+     * @throws NotAvailableForCompanyAccountsException          if the account type is COMPANY
      * @throws org.javashop.Exceptions.NotEnoughPointsException if the points amount do not match any discount
      */
     @Override
     public Voucher exchangePoints(@NonNull Account account, int points) {
         Validate.isTrue(points > 0, "points amount can not be negative");
-        if(account.getType() == AccountType.COMPANY) throw new NotAvailableForCompanyAccountsException();
+        if (account.getType() == AccountType.COMPANY) throw new NotAvailableForCompanyAccountsException();
         return voucherRepository.generateVoucher(points);
     }
 
@@ -80,17 +83,18 @@ public class DiscountService implements DiscountStrategy {
      *
      * @return Returns an unmodifiable map where key is points amount and value is discount percentage
      */
-    public Map<Integer,Integer> getPointsToDiscount(){
+    public Map<Integer, Integer> getPointsToDiscount() {
         return Collections.unmodifiableMap(voucherRepository.getPointsToDiscount());
     }
 
     /**
      * Return the highest discount percentage available for the given points balance.
-     *Returns 0 if no discount tier is reachable
+     * Returns 0 if no discount tier is reachable
+     *
      * @param currentPoints the current points of the account
      * @return the maximum available discount percentage, or 0 if non-available
      */
-    public int getMaxAvailableDiscount(int currentPoints){
+    public int getMaxAvailableDiscount(int currentPoints) {
         return voucherRepository.getPointsToDiscount().entrySet().stream()
                 .filter(e -> e.getKey() <= currentPoints)
                 .mapToInt(Map.Entry::getValue)
@@ -105,7 +109,7 @@ public class DiscountService implements DiscountStrategy {
      * @return the points requited for the given discount
      * @throws NoSuchDiscountException if no tier exists for the given discount percentage
      */
-    public int getPointsForDiscount(int discountPercent){
+    public int getPointsForDiscount(int discountPercent) {
         return voucherRepository.getPointsToDiscount().entrySet().stream()
                 .filter(e -> e.getValue().equals(discountPercent))
                 .map(Map.Entry::getKey)
@@ -118,7 +122,7 @@ public class DiscountService implements DiscountStrategy {
      *
      * @param voucher the voucher
      */
-    public void addVoucherToRepository(@NonNull Voucher voucher){
+    public void addVoucherToRepository(@NonNull Voucher voucher) {
         voucherRepository.addVoucher(voucher);
     }
 }

@@ -39,7 +39,7 @@ public record Order(Account account,
         Validate.notNull(subTotal, "Subtotal cannot be null");
         Validate.notNull(total, "total cannot be null");
         Validate.notEmpty(productsList, "Products list is empty");
-        Validate.isTrue( total.signum() > 0, "negative Total");
+        Validate.isTrue(total.signum() > 0, "negative Total");
         Validate.isTrue(total.compareTo(subTotal) <= 0, "Total cannot be greater than subtotal");
     }
 

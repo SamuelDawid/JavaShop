@@ -32,6 +32,7 @@ public class Cart {
     private final List<CartItem> cart;
     private final Account customerAccount;
     private BigDecimal cartTotal = BigDecimal.ZERO;
+
     /**
      * Instantiates a new Cart.
      *
@@ -47,13 +48,13 @@ public class Cart {
      *
      * @param product the product to add
      * @param howMany the quantity to add (must be greater than 0)
-     * @throws UnavailableProducts  if the product is not available
-     * @throws  InvalidQuantityException if the quantity is zero or negative
+     * @throws UnavailableProducts      if the product is not available
+     * @throws InvalidQuantityException if the quantity is zero or negative
      */
-    public void addToCart(@NonNull Electronics product,int howMany){
-        if(!product.isAvailable()) throw new UnavailableProducts(product.getName());
-        if(howMany <= 0) throw new InvalidQuantityException();
-        cart.add(new CartItem(product,howMany));
+    public void addToCart(@NonNull Electronics product, int howMany) {
+        if (!product.isAvailable()) throw new UnavailableProducts(product.getName());
+        if (howMany <= 0) throw new InvalidQuantityException();
+        cart.add(new CartItem(product, howMany));
         setCartTotal(calculateTotal());
     }
 
@@ -64,10 +65,9 @@ public class Cart {
      * @return true if the product was successfully removed
      * @throws ProductNotFoundException if the product is not in the cart
      */
-    public boolean removeFromCart(@NonNull Electronics product)
-    {
-        CartItem itemToFind = cart.stream().filter( cartItem -> cartItem.product().equals(product)).findAny().orElseThrow(() -> new ProductNotFoundException(product.getId()));
-       setCartTotal(calculateTotal());
+    public boolean removeFromCart(@NonNull Electronics product) {
+        CartItem itemToFind = cart.stream().filter(cartItem -> cartItem.product().equals(product)).findAny().orElseThrow(() -> new ProductNotFoundException(product.getId()));
+        setCartTotal(calculateTotal());
         return cart.remove(itemToFind);
     }
 
@@ -76,12 +76,14 @@ public class Cart {
      *
      * @return the total price rounded to 2 decimal places
      */
-    public BigDecimal calculateTotal(){
-        return cart.stream().map( cartItem -> cartItem.product().getPrice()
-                .multiply(BigDecimal.valueOf(cartItem.qty())))
-                .reduce(BigDecimal.ZERO,BigDecimal::add).setScale(2,RoundingMode.HALF_UP);
+    public BigDecimal calculateTotal() {
+        return cart.stream().map(cartItem -> cartItem.product().getPrice()
+                        .multiply(BigDecimal.valueOf(cartItem.qty())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);
 
-    } /**
+    }
+
+    /**
      * Sets the cart total to the given value.
      * Used to apply discounts to the cart total.
      *
@@ -89,10 +91,11 @@ public class Cart {
      * @return the updated cart total
      */
 
-    public BigDecimal setCartTotal(BigDecimal total){
+    public BigDecimal setCartTotal(BigDecimal total) {
         this.cartTotal = total;
         return cartTotal;
     }
+
     /**
      * Creates an Order from the current cart and clears it.
      * Preserves the original subtotal and the potentially discounted total.
@@ -100,8 +103,8 @@ public class Cart {
      * @return the created order with PENDING status
      * @throws EmptyCartException if the cart is empty
      */
-    public Order checkout(){
-        if(cart.isEmpty()) throw new EmptyCartException();
+    public Order checkout() {
+        if (cart.isEmpty()) throw new EmptyCartException();
         BigDecimal subTotal = calculateTotal();
         Order newOrder = new Order(
                 customerAccount,

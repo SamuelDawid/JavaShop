@@ -59,22 +59,24 @@ public class ShopCLI {
             }
         }
     }
-    private void accountInf(){
+
+    private void accountInf() {
         System.out.println(account);
     }
-    private void pointsExchange(Account account){
 
-            if(account.getType() == AccountType.COMPANY) {
-                System.out.println("Your account has a 7% flat rate discount!");
-                return;
-            }
+    private void pointsExchange(Account account) {
+
+        if (account.getType() == AccountType.COMPANY) {
+            System.out.println("Your account has a 7% flat rate discount!");
+            return;
+        }
 
         menuManager.printPointsMenu(account.getPoints(), discountService.getPointsToDiscount());
         System.out.println("Would you like to generate voucher discount? (Always chooses max discount available)(yes/no)");
         String userAnswer = scanner.nextLine();
-        if(userAnswer.equalsIgnoreCase("yes")){
+        if (userAnswer.equalsIgnoreCase("yes")) {
             int maxDiscount = discountService.getMaxAvailableDiscount(account.getPoints());
-            if(maxDiscount == 0) {
+            if (maxDiscount == 0) {
                 System.out.println("Not enough points to redeem!");
                 return;
             }
@@ -84,8 +86,9 @@ public class ShopCLI {
             account.addVoucherToAccount(newVoucher);
             discountService.addVoucherToRepository(newVoucher);
             System.out.println(newVoucher);
-        }else System.out.println("Ok, back to main");
+        } else System.out.println("Ok, back to main");
     }
+
     private void showProducts() {
         for (String s : productManager.returnAllProducts())
             System.out.println(s);
@@ -119,42 +122,41 @@ public class ShopCLI {
 
     private void checkout() {
         try {
-        Order order = discountHandler(cart, account).checkout();
-        orderProcessor.submitOrderAsync(order)
-                .thenAccept(inv -> {
-                    try {
-                        FilesHandler.saveToFile(inv, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
-                        FilesHandler.saveToFile(order, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
-                        System.out.println("Thank you for your order!");
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).exceptionally(e -> {
-                    System.out.println("Error: " + e.getMessage());
-                    return null;
-                });
-    } catch (EmptyCartException e) {
+            Order order = discountHandler(cart, account).checkout();
+            orderProcessor.submitOrderAsync(order)
+                    .thenAccept(inv -> {
+                        try {
+                            FilesHandler.saveToFile(inv, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
+                            FilesHandler.saveToFile(order, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
+                            System.out.println("Thank you for your order!");
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).exceptionally(e -> {
+                        System.out.println("Error: " + e.getMessage());
+                        return null;
+                    });
+        } catch (EmptyCartException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private Cart discountHandler(Cart cart,Account account){
+    private Cart discountHandler(Cart cart, Account account) {
         account.removeExpiredOrUsedVouchers();
-        if(account.getType() == AccountType.COMPANY){
-            cart.setCartTotal(discountService.applyCompany(cart.getCartTotal(),account.getType()));
+        if (account.getType() == AccountType.COMPANY) {
+            cart.setCartTotal(discountService.applyCompany(cart.getCartTotal(), account.getType()));
             return cart;
-        }else {
-            if(account.getVouchersList().isEmpty())
-            {
+        } else {
+            if (account.getVouchersList().isEmpty()) {
                 System.out.println("No vouchers Available,generating your Invoice");
                 return cart;
-            }else {
-                    Optional<Voucher> biggestVoucher = account.getVouchersList().stream().max(Comparator.comparingInt(Voucher::percentage));
-                    if(biggestVoucher.isPresent()){
-                        BigDecimal newTotal = discountService.applyVoucher(cart.getCartTotal(), biggestVoucher.get());
-                        account.removeVoucherFromAccount(biggestVoucher.get());
-                        cart.setCartTotal(newTotal);
-                    }
+            } else {
+                Optional<Voucher> biggestVoucher = account.getVouchersList().stream().max(Comparator.comparingInt(Voucher::percentage));
+                if (biggestVoucher.isPresent()) {
+                    BigDecimal newTotal = discountService.applyVoucher(cart.getCartTotal(), biggestVoucher.get());
+                    account.removeVoucherFromAccount(biggestVoucher.get());
+                    cart.setCartTotal(newTotal);
+                }
                 return cart;
             }
         }

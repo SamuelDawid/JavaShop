@@ -37,10 +37,11 @@ class ProductManagerTest {
     Computer alienWereAurora;
 
     @BeforeEach
-    void setUp(){
-        samsungGalaxy = new SmartPhone("SGS24","Samsung galaxy S24",new BigDecimal(2000),5, BATTERY.mAh_5000, Colour.BLACK);
-        alienWereAurora = new Computer("AWAR9","Alienwere Aurora R9",new BigDecimal(11_000),2, CPU.INTEL, GPU.NVIDIA, RAM.GB64);
+    void setUp() {
+        samsungGalaxy = new SmartPhone("SGS24", "Samsung galaxy S24", new BigDecimal(2000), 5, BATTERY.mAh_5000, Colour.BLACK);
+        alienWereAurora = new Computer("AWAR9", "Alienwere Aurora R9", new BigDecimal(11_000), 2, CPU.INTEL, GPU.NVIDIA, RAM.GB64);
     }
+
     @Test
     void shouldAddProductSuccessfully() {
         //Act
@@ -51,52 +52,57 @@ class ProductManagerTest {
         verify(productRepository).save(alienWereAurora);
 
     }
+
     @Test
     void shouldThrowProductNotFoundException() {
         //Arrange
         when(productRepository.findById("DoNotExist")).thenReturn(Optional.empty());
         //Act + Assert
-        ProductNotFoundException ex = assertThrows(ProductNotFoundException.class,() -> productManager.modify("DoNotExist",samsungGalaxy));
-        assertEquals("Product not found with ID: DoNotExist",ex.getMessage());
+        ProductNotFoundException ex = assertThrows(ProductNotFoundException.class, () -> productManager.modify("DoNotExist", samsungGalaxy));
+        assertEquals("Product not found with ID: DoNotExist", ex.getMessage());
     }
+
     @Test
-    void ShouldReturnTrueWhenProductIsDeleted(){
+    void ShouldReturnTrueWhenProductIsDeleted() {
         when(productRepository.delete("SGS24")).thenReturn(true);
         //Act + Assert
         assertThat(productManager.delete("SGS24")).isTrue();
     }
+
     @Test
-    void ShouldDecreesStockSuccessfully(){
+    void ShouldDecreesStockSuccessfully() {
         when(productRepository.findById(samsungGalaxy.getId())).thenReturn(Optional.of(samsungGalaxy));
-       int result = productManager.decreaseStock(samsungGalaxy.getId(),3);
-       assertThat(result).isEqualTo(3);
-       assertThat(samsungGalaxy.getQuantity()).isEqualTo(2);
+        int result = productManager.decreaseStock(samsungGalaxy.getId(), 3);
+        assertThat(result).isEqualTo(3);
+        assertThat(samsungGalaxy.getQuantity()).isEqualTo(2);
     }
+
     @Test
-    void ShouldReturnZeroWhenDecreesStockByMaxQtyOrMore(){
+    void ShouldReturnZeroWhenDecreesStockByMaxQtyOrMore() {
         when(productRepository.findById(samsungGalaxy.getId())).thenReturn(Optional.of(samsungGalaxy));
         when(productRepository.findById(alienWereAurora.getId())).thenReturn(Optional.of(alienWereAurora));
-        int result = productManager.decreaseStock(samsungGalaxy.getId(),5);
-        int resultTwo = productManager.decreaseStock(alienWereAurora.getId(),20);
+        int result = productManager.decreaseStock(samsungGalaxy.getId(), 5);
+        int resultTwo = productManager.decreaseStock(alienWereAurora.getId(), 20);
         assertThat(result).isEqualTo(5);
         assertThat(resultTwo).isEqualTo(2);
         assertThat(samsungGalaxy.getQuantity()).isEqualTo(0);
         assertThat(alienWereAurora.getQuantity()).isEqualTo(0);
     }
+
     @Nested
-    class ProductTest{
+    class ProductTest {
         @Test
         void shouldThrowWhenNameIsBlank() {
             //Arrange
             String name = "";
             //Act + assert
-            assertThrows(IllegalArgumentException.class,() -> new Electronics("id1",name,new BigDecimal(123),1));
+            assertThrows(IllegalArgumentException.class, () -> new Electronics("id1", name, new BigDecimal(123), 1));
         }
 
         @Test
         void shouldThrowWhenNameIsNull() {
             //Act + assert
-            assertThrows(NullPointerException.class,() -> new Electronics("id1",null,new BigDecimal(123),1));
+            assertThrows(NullPointerException.class, () -> new Electronics("id1", null, new BigDecimal(123), 1));
         }
 
         @Test
@@ -104,13 +110,13 @@ class ProductManagerTest {
             //Arrange
             String id = "";
             //Act + assert
-            assertThrows(IllegalArgumentException.class,() -> new Electronics(id,"name",new BigDecimal(123),1));
+            assertThrows(IllegalArgumentException.class, () -> new Electronics(id, "name", new BigDecimal(123), 1));
         }
 
         @Test
         void shouldThrowWhenIdIsNull() {
             //Act + assert
-                    assertThrows(NullPointerException.class,() -> new Electronics(null,"name",new BigDecimal(123),1));
+            assertThrows(NullPointerException.class, () -> new Electronics(null, "name", new BigDecimal(123), 1));
         }
 
         @Test
@@ -118,7 +124,7 @@ class ProductManagerTest {
             //Arrange
             BigDecimal price = new BigDecimal(0);
             //Act + assert
-            assertThrows(IllegalArgumentException.class,() -> new Electronics("id","name",price,1));
+            assertThrows(IllegalArgumentException.class, () -> new Electronics("id", "name", price, 1));
         }
 
         @Test
@@ -126,7 +132,7 @@ class ProductManagerTest {
             //Arrange
             BigDecimal price = new BigDecimal(-10);
             //Act + assert
-            assertThrows(IllegalArgumentException.class,() -> new Electronics("id","name",price,1));
+            assertThrows(IllegalArgumentException.class, () -> new Electronics("id", "name", price, 1));
         }
 
         @Test
@@ -134,7 +140,7 @@ class ProductManagerTest {
             //Arrange
             int quant = 0;
             //Act + assert
-            assertThrows(IllegalArgumentException.class,() -> new Electronics("id","name",new BigDecimal(123),quant));
+            assertThrows(IllegalArgumentException.class, () -> new Electronics("id", "name", new BigDecimal(123), quant));
         }
 
         @Test
@@ -142,17 +148,17 @@ class ProductManagerTest {
             //Arrange
             int quant = -10;
             //Act + assert
-            assertThrows(IllegalArgumentException.class,() -> new Electronics("id","name",new BigDecimal(123),quant));
+            assertThrows(IllegalArgumentException.class, () -> new Electronics("id", "name", new BigDecimal(123), quant));
         }
 
         @Test
         void shouldCreateElectronicsSuccessfully() {
-            Electronics e = assertDoesNotThrow(() -> new Electronics("id1","Samsung",new BigDecimal(123),1));
+            Electronics e = assertDoesNotThrow(() -> new Electronics("id1", "Samsung", new BigDecimal(123), 1));
             assertAll(
-                    () -> assertEquals("id1",e.getId()),
-                    () -> assertEquals("Samsung",e.getName()),
+                    () -> assertEquals("id1", e.getId()),
+                    () -> assertEquals("Samsung", e.getName()),
                     () -> assertThat(new BigDecimal(123)).isEqualByComparingTo(e.getPrice()),
-                    () -> assertEquals(1,e.getQuantity())
+                    () -> assertEquals(1, e.getQuantity())
             );
 
         }
