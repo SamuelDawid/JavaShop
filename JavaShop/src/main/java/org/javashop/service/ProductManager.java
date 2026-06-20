@@ -5,7 +5,6 @@ import lombok.NonNull;
 import org.javashop.Exceptions.ProductAlreadyExists;
 import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.domain.resources.Electronics;
-import org.javashop.repo.InMemoryProductRepository;
 import org.javashop.repo.ProductsRepository;
 
 import java.util.ArrayList;

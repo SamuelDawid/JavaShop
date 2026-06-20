@@ -1,14 +1,12 @@
 package org.javashop.domain.User;
 
 import lombok.*;
-import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.Validate;
 import org.javashop.enums.AccountType;
 import org.javashop.models.Voucher;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @ToString

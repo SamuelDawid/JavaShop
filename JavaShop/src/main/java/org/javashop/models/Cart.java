@@ -2,7 +2,6 @@ package org.javashop.models;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.ToString;
 import org.javashop.Exceptions.EmptyCartException;
 import org.javashop.Exceptions.InvalidQuantityException;
@@ -11,11 +10,9 @@ import org.javashop.Exceptions.UnavailableProducts;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.enums.OrderStatus;
-import org.javashop.service.DiscountService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.LinkedList;

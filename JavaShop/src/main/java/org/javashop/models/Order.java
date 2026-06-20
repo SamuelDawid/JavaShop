@@ -2,12 +2,10 @@ package org.javashop.models;
 
 import org.apache.commons.lang3.Validate;
 import org.javashop.domain.User.Account;
-import org.javashop.domain.resources.Electronics;
 import org.javashop.enums.OrderStatus;
 import org.javashop.interfaces.Savable;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
