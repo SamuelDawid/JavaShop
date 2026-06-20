@@ -1,18 +1,20 @@
 package org.javashop.repo;
 
 import lombok.NonNull;
+import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.domain.resources.Electronics;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * In-memory implemenation of {@link ProductsRepository} backed by a HashMap
  */
 public class InMemoryProductRepository implements ProductsRepository {
-    private final Map<String, Electronics> electronicsList = new HashMap<>();
+    private final Map<String, Electronics> electronicsList = new ConcurrentHashMap<>();
 
     /**
      * Finds a product by its ID.
@@ -68,5 +70,29 @@ public class InMemoryProductRepository implements ProductsRepository {
     @Override
     public boolean delete(String productId) {
         return electronicsList.remove(productId) != null;
+    }
+    /**
+     * Decreases the stock quantity of a product by the requested amount.
+     * If requested quantity exceeds available stock. ships only what is available.
+     *
+     * @param id           the product iD
+     * @param requestedQty the quantity requested by the customer
+     * @return the actual quantity shipped
+     * @throws ProductNotFoundException if no product exists with the given ID
+     */
+    @Override
+    public int decreaseStock(String id, int requestedQty) {
+        AtomicInteger shipped = new AtomicInteger();
+        electronicsList.compute(id, (key,product) -> {
+            if (product == null)
+                throw new ProductNotFoundException(id);
+
+            int shippedQty = Math.min(requestedQty, product.getQuantity());
+            product.setQuantity(product.getQuantity() - shippedQty);
+
+            shipped.set(shippedQty);
+            return product;
+        });
+        return shipped.get();
     }
 }

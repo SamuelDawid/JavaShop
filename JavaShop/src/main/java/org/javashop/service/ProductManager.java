@@ -10,6 +10,7 @@ import org.javashop.repo.ProductsRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ProductManager {
@@ -64,19 +65,9 @@ public class ProductManager {
      *
      * @param id           the product iD
      * @param requestedQty the quantity requested by the customer
-     * @return the actual quantity shipped
-     * @throws ProductNotFoundException if no product exists with the given ID
      */
     public int decreaseStock(String id, int requestedQty) {
-        Electronics product = productsRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-        int shippedQty = Math.min(requestedQty, product.getQuantity());
-        int qtyLeft = product.getQuantity() - requestedQty;
-        if (qtyLeft < 0)
-            product.setQuantity(0);
-        else
-            product.setQuantity(qtyLeft);
-        productsRepository.update(id, product);
-        return shippedQty;
+        return productsRepository.decreaseStock(id, requestedQty);
     }
 
     /**

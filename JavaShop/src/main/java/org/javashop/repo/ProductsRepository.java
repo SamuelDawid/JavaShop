@@ -11,4 +11,5 @@ public interface ProductsRepository {
     boolean save(Electronics product);
     void update(String id, Electronics newProduct);
     boolean delete(String productId);
+    int decreaseStock(String id, int requestedQty);
 }
