@@ -158,7 +158,7 @@ public class ShopCLI {
                 System.out.println("No vouchers Available,generating your Invoice");
                 return cart;
             } else {
-                Optional<Voucher> biggestVoucher = account.getVouchersList().stream().max(Comparator.comparingInt(Voucher::percentage));
+                Optional<Voucher> biggestVoucher = findBiggestVoucher();
                 if (biggestVoucher.isPresent()) {
                     BigDecimal newTotal = discountService.applyVoucher(cart.getCartTotal(), biggestVoucher.get());
                     account.removeVoucherFromAccount(biggestVoucher.get());
@@ -169,5 +169,8 @@ public class ShopCLI {
         }
     }
 
+    private Optional<Voucher> findBiggestVoucher() {
+        return account.getVouchersList().stream().max(Comparator.comparingInt(Voucher::percentage));
+    }
 }
 
