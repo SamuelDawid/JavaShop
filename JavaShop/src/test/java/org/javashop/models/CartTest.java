@@ -5,6 +5,7 @@ import org.javashop.Exceptions.UnavailableProducts;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Computer;
 import org.javashop.domain.resources.SmartPhone;
+import org.javashop.enums.AccountType;
 import org.javashop.enums.Colour;
 import org.javashop.enums.OrderStatus;
 import org.javashop.enums.pc.CPU;
@@ -12,6 +13,8 @@ import org.javashop.enums.pc.GPU;
 import org.javashop.enums.pc.RAM;
 import org.javashop.enums.phone.BATTERY;
 import org.javashop.repo.InMemoryProductRepository;
+import org.javashop.repo.InMemoryVoucherRepository;
+import org.javashop.service.DiscountService;
 import org.javashop.service.ProductManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +34,12 @@ import static org.mockito.Mockito.when;
 class CartTest {
     @Mock
     InMemoryProductRepository productRepository;
+    @Mock
+    InMemoryVoucherRepository voucherRepository;
     @InjectMocks
     ProductManager productManager;
+    @InjectMocks
+    DiscountService discountService;
     Cart cart;
     //Computers
     Computer gaming,office;
@@ -53,20 +60,15 @@ class CartTest {
         budget = new SmartPhone("PH-3", "Xiaomi 13", new BigDecimal("999.99"), 15,
                 BATTERY.mAh_5000, Colour.GREEN);
         // Account
-        Account testAccount = new Account("123-123","Test Subject");
+        Account testAccount = new Account("123-123","Test Subject", AccountType.NORMAL);
         cart = new Cart(testAccount);
     }
 
     @Test
     void shouldReturnTrueWhenAddingProducts(){
+        cart.addToCart(iPhone,1);
         //Asset + act
-        assertThat(cart.addToCart(iPhone,1)).isTrue();
         assertThat(cart.getCart()).hasSize(1);
-    }
-    @Test
-    void shouldReturnTrueWhenMaxQty(){
-        //Asset + act
-        assertThat(cart.addToCart(iPhone,8)).isTrue();
     }
     @Test
     void shouldThrowProductUnavailable(){
@@ -106,7 +108,7 @@ class CartTest {
         cart.addToCart(gaming,10);
         cart.addToCart(office,11);
         BigDecimal total = new BigDecimal("69299.75");
-        assertThat(cart.getTotal()).isEqualByComparingTo(total);
+        assertThat(cart.getCartTotal()).isEqualByComparingTo(total);
     }
 }
 
