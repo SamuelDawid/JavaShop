@@ -18,8 +18,8 @@ public class SmartPhone extends Electronics {
 
     public SmartPhone(String id, String name, BigDecimal price, int quantity, BATTERY battery, Colour colour) {
         super(id, name, price, quantity);
-        Validate.notBlank(battery.name(), "Please select valid battery type");
-        Validate.notBlank(colour.name(), "Please select valid colour");
+        Validate.notNull(battery.name(), "Please select valid battery type");
+        Validate.notNull(colour.name(), "Please select valid colour");
         this.battery = battery;
         this.accessories = new ArrayList<>(List.of(ACCESSORIES.No_Extras));
         this.colour = colour;

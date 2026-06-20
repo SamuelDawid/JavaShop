@@ -12,32 +12,25 @@ import org.javashop.enums.pc.CPU;
 import org.javashop.enums.pc.GPU;
 import org.javashop.enums.pc.RAM;
 import org.javashop.enums.phone.BATTERY;
-import org.javashop.repo.InMemoryProductRepository;
-import org.javashop.repo.InMemoryVoucherRepository;
-import org.javashop.service.DiscountService;
-import org.javashop.service.ProductManager;
+import org.javashop.interfaces.DiscountPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CartTest {
     @Mock
-    InMemoryProductRepository productRepository;
-    @Mock
-    InMemoryVoucherRepository voucherRepository;
-    @InjectMocks
-    ProductManager productManager;
-    @InjectMocks
-    DiscountService discountService;
+    DiscountPolicy policy;
     Cart cart;
     //Computers
     Computer gaming, office;
@@ -93,9 +86,10 @@ class CartTest {
 
     @Test
     void shouldReturnPriceForOneItem() {
+        when(policy.apply(any(), any())).thenReturn(new BigDecimal("4299.99"));
         cart.addToCart(iPhone, 1);
         BigDecimal total = new BigDecimal("4299.99");
-        Order result = cart.checkout();
+        Order result = cart.checkout(policy);
         assertAll(
                 () -> assertThat(result.productsList()).hasSize(1),
                 () -> assertThat(result).isNotNull(),
@@ -115,10 +109,11 @@ class CartTest {
         BigDecimal total = new BigDecimal("69299.75");
         assertThat(cart.getCartTotal()).isEqualByComparingTo(total);
     }
+
     @Test
-    void shouldUpdateCardTotal(){
-        cart.addToCart(iPhone,2);
-        cart.addToCart(samsung,1);
+    void shouldUpdateCardTotal() {
+        cart.addToCart(iPhone, 2);
+        cart.addToCart(samsung, 1);
         BigDecimal total = cart.getCartTotal();
         cart.removeFromCart(iPhone);
         BigDecimal newTotal = cart.getCartTotal();

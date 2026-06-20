@@ -6,7 +6,7 @@ import org.javashop.models.Voucher;
 
 import java.math.BigDecimal;
 
-public interface DiscountStrategy {
+public interface DiscountCalculations {
     BigDecimal applyCompany(BigDecimal basePrice, AccountType type);
     BigDecimal applyVoucher(BigDecimal basePrice, Voucher voucher);
     Voucher exchangePoints(Account account, int points);

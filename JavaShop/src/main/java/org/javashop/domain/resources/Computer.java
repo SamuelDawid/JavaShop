@@ -16,9 +16,9 @@ public class Computer extends Electronics {
 
     public Computer(String id, String name, BigDecimal price, int quantity, CPU cpu, GPU gpu, RAM ram) {
         super(id, name, price, quantity);
-        Validate.notBlank(cpu.name(), "Please select valid CPU");
-        Validate.notBlank(gpu.name(), "Please select valid GPU");
-        Validate.notBlank(ram.name(), "Please select valid RAM");
+        Validate.notNull(cpu.name(), "Please select valid CPU");
+        Validate.notNull(gpu.name(), "Please select valid GPU");
+        Validate.notNull(ram.name(), "Please select valid RAM");
         this.cpu = cpu;
         this.gpu = gpu;
         this.ram = ram;

@@ -1,17 +1,13 @@
 package org.javashop.service;
 
-import org.javashop.Exceptions.UnavailableProducts;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Computer;
 import org.javashop.domain.resources.Electronics;
-import org.javashop.domain.resources.SmartPhone;
 import org.javashop.enums.AccountType;
-import org.javashop.enums.Colour;
-import org.javashop.enums.OrderStatus;
 import org.javashop.enums.pc.CPU;
 import org.javashop.enums.pc.GPU;
 import org.javashop.enums.pc.RAM;
-import org.javashop.enums.phone.BATTERY;
+import org.javashop.interfaces.DiscountPolicy;
 import org.javashop.models.Cart;
 import org.javashop.models.Invoice;
 import org.javashop.models.Order;
@@ -30,17 +26,19 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrderProcessorTest {
+    @Mock
+    DiscountPolicy policy;
     @Mock
     ProductManager productManager;
     @InjectMocks
@@ -121,9 +119,10 @@ class OrderProcessorTest {
     class FileHandlerTest {
         @Test
         void shouldSaveFileSuccessfully(@TempDir Path tempDir) throws IOException {
+            when(policy.apply(any(),any())).thenReturn(new BigDecimal("4299.99"));
             testCart.addToCart(gaming, 2);
             testCart.addToCart(office, 3);
-            testOrder = testCart.checkout();
+            testOrder = testCart.checkout(policy);
             //act
             FilesHandler.saveToFile(testOrder, tempDir);
             Path savedFile = tempDir.resolve(testOrder.fileName());
@@ -140,15 +139,16 @@ class OrderProcessorTest {
         //arrange
         when(productManager.decreaseStock(gaming.getId(), 2)).thenReturn(2);
         when(productManager.decreaseStock(office.getId(), 3)).thenReturn(3);
+        when(policy.apply(any(),any())).thenReturn(new BigDecimal("1999.99"));
         testCart.addToCart(gaming, 2);
         testCart.addToCart(office, 3);
-        testOrder = testCart.checkout();
+        testOrder = testCart.checkout(policy);
         //act
         Invoice result = orderProcessor.processOrder(testOrder);
         String expectedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         //assert
         assertAll(
-                () -> assertThat(testCart.getCartTotal()).isEqualByComparingTo(result.total()),
+                () -> assertThat(result.total()).isEqualByComparingTo(testOrder.total()),
                 () -> assertThat(result.invoiceNumber()).startsWith("INV-" + expectedDate),
                 () -> assertThat(result.issueDate()).isNotNull(),
                 () -> assertThat(result.listOfProductsWithAdjustedQuantity()).hasSize(2),
@@ -159,19 +159,23 @@ class OrderProcessorTest {
     @Test
     void shouldReturnInvoiceWithAdjustedTotal() {
         when(productManager.decreaseStock(gaming.getId(), 7)).thenReturn(5);
+        when(policy.apply(any(),any())).thenReturn(new BigDecimal("19999.95"));
+
         testCart.addToCart(gaming, 7);
-        testOrder = testCart.checkout();
+        testOrder = testCart.checkout(policy);
         //act
         Invoice result = orderProcessor.processOrder(testOrder);
         // assert
-        assertThat(result.total()).isEqualByComparingTo(new BigDecimal("19999.95"));
+        assertThat(result.total()).isEqualByComparingTo(new BigDecimal("14285.96"));
     }
 
     @Test
     void shouldThrowIllegalArgumentExceptionWhenQtyStockIsNegative() {
         when(productManager.decreaseStock(gaming.getId(), 7)).thenReturn(-5);
+        when(policy.apply(any(),any())).thenReturn(new BigDecimal("4299.99"));
+
         testCart.addToCart(gaming, 7);
-        testOrder = testCart.checkout();
+        testOrder = testCart.checkout(policy);
         //act
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> orderProcessor.processOrder(testOrder));
         // assert

@@ -7,9 +7,11 @@ import org.javashop.Exceptions.EmptyCartException;
 import org.javashop.Exceptions.InvalidQuantityException;
 import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.Exceptions.UnavailableProducts;
+import org.javashop.discount.DiscountPolicyFactory;
 import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.enums.OrderStatus;
+import org.javashop.interfaces.DiscountPolicy;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -29,7 +31,6 @@ public class Cart {
     private final List<CartItem> cart;
     private final Account customerAccount;
     private BigDecimal cartTotal = BigDecimal.ZERO;
-
     /**
      * Instantiates a new Cart.
      *
@@ -52,7 +53,7 @@ public class Cart {
         if (!product.isAvailable()) throw new UnavailableProducts(product.getName());
         if (howMany <= 0) throw new InvalidQuantityException();
         cart.add(new CartItem(product, howMany));
-        setCartTotal(calculateTotal());
+        cartTotal = calculateTotal();
     }
 
     /**
@@ -64,7 +65,7 @@ public class Cart {
     public void removeFromCart(@NonNull Electronics product) {
         CartItem itemToFind = cart.stream().filter(cartItem -> cartItem.product().equals(product)).findAny().orElseThrow(() -> new ProductNotFoundException(product.getId()));
         cart.remove(itemToFind);
-        setCartTotal(calculateTotal());
+        cartTotal = calculateTotal();
     }
 
     /**
@@ -80,28 +81,16 @@ public class Cart {
     }
 
     /**
-     * Sets the cart total to the given value.
-     * Used to apply discounts to the cart total.
-     *
-     * @param total the new total to set
-     * @return the updated cart total
-     */
-
-    public BigDecimal setCartTotal(BigDecimal total) {
-        this.cartTotal = total;
-        return cartTotal;
-    }
-
-    /**
      * Creates an Order from the current cart and clears it.
      * Preserves the original subtotal and the potentially discounted total.
      *
      * @return the created order with PENDING status
      * @throws EmptyCartException if the cart is empty
      */
-    public Order checkout() {
+    public Order checkout(DiscountPolicy policy) {
         if (cart.isEmpty()) throw new EmptyCartException();
         BigDecimal subTotal = calculateTotal();
+        cartTotal = policy.apply(this,customerAccount);
         Order newOrder = new Order(
                 customerAccount,
                 UUID.randomUUID(),
@@ -111,6 +100,7 @@ public class Cart {
                 cartTotal,
                 OrderStatus.PENDING);
         cart.clear();
+        cartTotal = BigDecimal.ZERO;
         return newOrder;
     }
 

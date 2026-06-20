@@ -12,7 +12,7 @@ import java.math.RoundingMode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Electronics {
     @EqualsAndHashCode.Include
-    private String Id;
+    private String id;
     private String name;
     @Setter
     private BigDecimal price;
@@ -24,7 +24,7 @@ public class Electronics {
         Validate.notBlank(id, "Id can not be blank");
         Validate.isTrue(price.signum() > 0, "Price must be more than 0");
         Validate.isTrue(quantity > 0, "Quantity must be more than 0");
-        Id = id;
+        this.id = id;
         this.name = name;
         this.price = price.setScale(2, RoundingMode.HALF_UP);
         this.quantity = quantity;
@@ -33,7 +33,7 @@ public class Electronics {
 
     @Override
     public String toString() {
-        return "Product[" + Id + "] " + name + " " + price + " zł " + "(" + quantity + ")";
+        return "Product[" + id + "] " + name + " " + price + " zł " + "(" + quantity + ")";
     }
 
     public boolean isAvailable() {

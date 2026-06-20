@@ -38,7 +38,6 @@ public class ShopCLI {
     private final Scanner scanner = new Scanner(System.in);
     private final MenuManager menuManager = new MenuManager();
     private final DiscountPolicyFactory discountPolicyFactory;
-
     /**
      * Starts the main application loop.
      * Runs until the user selects the exit option.
@@ -124,8 +123,10 @@ public class ShopCLI {
     }
 
     private void checkout() {
+        account.removeExpiredOrUsedVouchers();
+        DiscountPolicy policy = discountPolicyFactory.forAccount(account);
         try {
-            Order order = discountHandler(cart, account).checkout();
+            Order order = cart.checkout(policy);
             orderProcessor.submitOrderAsync(order)
                     .thenAccept(inv -> {
                         saveFiles(inv, order);
@@ -148,12 +149,6 @@ public class ShopCLI {
         }
     }
 
-    private Cart discountHandler(Cart cart, Account account) {
-        account.removeExpiredOrUsedVouchers();
-        DiscountPolicy policy = discountPolicyFactory.forAccount(account);
-        cart.setCartTotal(policy.apply(cart, account));
-        return cart;
-    }
 }
 
 

@@ -9,7 +9,7 @@ import org.javashop.Exceptions.NotAvailableForCompanyAccountsException;
 import org.javashop.Exceptions.OnlyCompanyAccountDiscountException;
 import org.javashop.domain.User.Account;
 import org.javashop.enums.AccountType;
-import org.javashop.interfaces.DiscountStrategy;
+import org.javashop.interfaces.DiscountCalculations;
 import org.javashop.models.Voucher;
 import org.javashop.repo.VoucherRepository;
 
@@ -22,9 +22,9 @@ import java.util.Map;
  * The type Discount service.
  */
 @RequiredArgsConstructor
-public class DiscountService implements DiscountStrategy {
+public class DiscountService implements DiscountCalculations {
     private final VoucherRepository voucherRepository;
-
+    private static final BigDecimal COMPANY_DISCOUNT_AMMOUNT = new BigDecimal("0.93");
     /**
      * Applies a 7% discount for company accounts.
      * Throws an exception if the account type is not COMPANY
@@ -37,8 +37,7 @@ public class DiscountService implements DiscountStrategy {
     @Override
     public BigDecimal applyCompany(@NonNull BigDecimal basePrice, @NonNull AccountType type) {
         if (type != AccountType.COMPANY) throw new OnlyCompanyAccountDiscountException();
-        BigDecimal discount = new BigDecimal("0.93");
-        return basePrice.multiply(discount).setScale(2, RoundingMode.HALF_UP);
+        return basePrice.multiply(COMPANY_DISCOUNT_AMMOUNT).setScale(2, RoundingMode.HALF_UP);
     }
 
     /**

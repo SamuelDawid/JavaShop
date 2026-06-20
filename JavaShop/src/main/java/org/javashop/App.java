@@ -47,6 +47,6 @@ public class App {
                         BATTERY.mAh_5000, Colour.GREEN)));
 
         //endregion
-        new ShopCLI(manager, cart, orderProcessor, discountService, account, discountPolicyFactory).start();
+        new ShopCLI(manager, cart, orderProcessor, discountService, account,discountPolicyFactory).start();
     }
 }

@@ -1,0 +1,5 @@
+Invoice INV-20260620-1
+-issueDate:2026-06-20 14:59 CEST
+[Product[PC-2] Office Pro 1499.99 zł (8) , Ordered=2, Shipped=2]
+-total: 2699.98
+-user: Account(accountNumber=123, ownerName=Samuel K, type=NORMAL, points=0, vouchersList=[])
