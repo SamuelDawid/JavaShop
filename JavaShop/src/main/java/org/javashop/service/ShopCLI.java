@@ -125,12 +125,12 @@ public class ShopCLI {
     private void checkout() {
         account.removeExpiredOrUsedVouchers();
         DiscountPolicy policy = discountPolicyFactory.forAccount(account);
+        Order order = cart.checkout(policy);
         try {
-            Order order = cart.checkout(policy);
             orderProcessor.submitOrderAsync(order)
                     .thenAccept(inv -> {
                         saveFiles(inv, order);
-                        System.out.println("Thank you for your order!");
+                        payment();
                     }).exceptionally(e -> {
                         log.error("Order checkout failed", e);
                         return null;
@@ -138,8 +138,11 @@ public class ShopCLI {
         } catch (EmptyCartException e) {
             log.error("checkout failed: ", e);
         }
-    }
 
+    }
+    private void payment(){
+
+    }
     private void saveFiles(Savable inv, Savable order) {
         try {
             FilesHandler.saveToFile(inv, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);
