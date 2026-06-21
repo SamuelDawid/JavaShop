@@ -13,10 +13,7 @@ import org.javashop.enums.AccountType;
 import org.javashop.interfaces.DiscountPolicy;
 import org.javashop.interfaces.Savable;
 import org.javashop.menu.MenuManager;
-import org.javashop.models.Cart;
-import org.javashop.models.CartItem;
-import org.javashop.models.Order;
-import org.javashop.models.Voucher;
+import org.javashop.models.*;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -38,6 +35,8 @@ public class ShopCLI {
     private final Scanner scanner = new Scanner(System.in);
     private final MenuManager menuManager = new MenuManager();
     private final DiscountPolicyFactory discountPolicyFactory;
+    private final PaymentService paymentService;
+    private volatile Invoice unpaidInvoice;
     /**
      * Starts the main application loop.
      * Runs until the user selects the exit option.
@@ -53,6 +52,7 @@ public class ShopCLI {
                 case "4" -> checkout();
                 case "5" -> accountInf();
                 case "6" -> pointsExchange(account);
+                case "7" -> payment();
                 case "0" -> {
                     System.out.println("Bye!");
                     orderProcessor.shutDown();
@@ -130,7 +130,7 @@ public class ShopCLI {
             orderProcessor.submitOrderAsync(order)
                     .thenAccept(inv -> {
                         saveFiles(inv, order);
-                        payment();
+                        this.unpaidInvoice = inv;
                     }).exceptionally(e -> {
                         log.error("Order checkout failed", e);
                         return null;
@@ -141,7 +141,15 @@ public class ShopCLI {
 
     }
     private void payment(){
-
+        if(unpaidInvoice == null) System.out.println("Nothing to pay");
+        System.out.println("""
+                 KARTA
+                 BLIK
+                 PRZELEW
+                """);
+        String chosenMethod = scanner.nextLine();
+        PaymentResult result = paymentService.pay(chosenMethod,unpaidInvoice.total(),unpaidInvoice.userInformation().getAccountNumber(), unpaidInvoice.invoiceNumber());
+        if(result.successful()) unpaidInvoice = null;
     }
     private void saveFiles(Savable inv, Savable order) {
         try {

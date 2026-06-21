@@ -19,6 +19,7 @@ public class MenuManager {
                 4. Złóż zamówienie
                 5. Informacje o Koncie
                 6. Wymiana punktów
+                7. Płatności
                 0. Wyjście
                 """);
     }

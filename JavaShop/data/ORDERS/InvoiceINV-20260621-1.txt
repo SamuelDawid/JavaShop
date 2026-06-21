@@ -1,0 +1,5 @@
+Invoice INV-20260621-1
+-issueDate:2026-06-21 14:17 CEST
+[Product[PC-1] Gaming Beast 3999.99 zł (3) , Ordered=2, Shipped=2]
+-total: 7999.98
+-user: Account(accountNumber=123, ownerName=Samuel K, type=NORMAL, points=100, vouchersList=[], isBlocked=false)

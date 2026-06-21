@@ -11,28 +11,51 @@ import org.javashop.enums.pc.CPU;
 import org.javashop.enums.pc.GPU;
 import org.javashop.enums.pc.RAM;
 import org.javashop.enums.phone.BATTERY;
+import org.javashop.interfaces.PaymentStrategy;
+import org.javashop.interfaces.Validator;
 import org.javashop.models.Cart;
+import org.javashop.repo.InMemoryAccountRepository;
 import org.javashop.repo.InMemoryProductRepository;
 import org.javashop.repo.InMemoryVoucherRepository;
-import org.javashop.service.DiscountService;
-import org.javashop.service.OrderProcessor;
-import org.javashop.service.ProductManager;
-import org.javashop.service.ShopCLI;
+import org.javashop.service.*;
+import org.javashop.validators.AmountValidator;
+import org.javashop.validators.NotBlockedValidator;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws InterruptedException {
 
         InMemoryProductRepository repository = new InMemoryProductRepository();
         InMemoryVoucherRepository voucherRepository = new InMemoryVoucherRepository();
+        InMemoryAccountRepository accountRepository =  new InMemoryAccountRepository();
         ProductManager manager = new ProductManager(repository);
         OrderProcessor orderProcessor = new OrderProcessor(manager);
         DiscountService discountService = new DiscountService(voucherRepository);
         DiscountPolicyFactory discountPolicyFactory = DiscountPolicyFactory.create(discountService);
         Account account = new Account("123", "Samuel K", AccountType.NORMAL);
+        accountRepository.addAccount(account);
         Cart cart = new Cart(account);
+
+        Map<String, PaymentStrategy> methods = Map.of(
+                "KARTA",   (amount, customerId, desc) -> System.out.println("Card charged: " + amount),
+                "BLIK",    (amount, customerId, desc) -> System.out.println("BLIK paid: " + amount),
+                "PRZELEW", (amount, customerId, desc) -> System.out.println("Transfer sent: " + amount)
+        );
+
+        List<Validator> validators = List.of(
+                new AmountValidator(),
+                new NotBlockedValidator(accountRepository)
+        );
+
+        PaymentService paymentService = new PaymentService(methods, validators);
+
+        paymentService.onPayment(r -> System.out.println("[LOG] "       + r.method() + " " + r.amount() + " ok=" + r.successful()));
+        paymentService.onPayment(r -> System.out.println("[ANALYTICS] " + r.amount()));
+        paymentService.onPayment(r -> System.out.println("[AUDIT] "     + r.dateTime() + " " + r.message()));
+
         //regionProducts
         manager.addAllProducts(List.of(
                 new Computer("PC-1", "Gaming Beast", new BigDecimal("3999.99"), 5,
@@ -47,6 +70,6 @@ public class App {
                         BATTERY.mAh_5000, Colour.GREEN)));
 
         //endregion
-        new ShopCLI(manager, cart, orderProcessor, discountService, account,discountPolicyFactory).start();
+        new ShopCLI(manager, cart, orderProcessor, discountService, account,discountPolicyFactory,paymentService).start();
     }
 }
