@@ -7,9 +7,10 @@ public record PaymentResult(String customerId,
                             BigDecimal amount,
                             LocalDateTime dateTime,
                             String message,
-                            boolean successful) {
+                            boolean successful,
+                            String method) {
     public PaymentResult markSuccessful() {
-        return new PaymentResult(customerId, amount, dateTime, message, true);
+        return new PaymentResult(customerId, amount, dateTime, message, true,method);
     }
 }
 

@@ -19,7 +19,8 @@ public class Account {
     @Setter
     private int points;
     private List<Voucher> vouchersList;
-
+    @Setter
+    private boolean isBlocked = false;
     public Account(String accountNumber, String ownerName, AccountType type) {
         Validate.notEmpty(accountNumber, "account number must be filled");
         Validate.notEmpty(ownerName, "Owner name and surname must be filled");
