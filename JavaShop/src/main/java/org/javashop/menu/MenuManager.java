@@ -1,6 +1,7 @@
 package org.javashop.menu;
 
 import java.util.Map;
+
 /**
  * The type Menu manager.
  */
@@ -9,8 +10,8 @@ public class MenuManager {
     /**
      * Print main menu.
      */
-    public void printMainMenu(){
-        System.out.println( """
+    public void printMainMenu() {
+        System.out.println("""
                 === JAVASHOP ===
                 1. Przeglądaj produkty
                 2. Dodaj produkt do koszyka
@@ -18,6 +19,7 @@ public class MenuManager {
                 4. Złóż zamówienie
                 5. Informacje o Koncie
                 6. Wymiana punktów
+                7. Płatności
                 0. Wyjście
                 """);
     }

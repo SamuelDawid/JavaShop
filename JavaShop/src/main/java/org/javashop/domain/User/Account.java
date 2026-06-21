@@ -1,14 +1,12 @@
 package org.javashop.domain.User;
 
 import lombok.*;
-import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.Validate;
 import org.javashop.enums.AccountType;
 import org.javashop.models.Voucher;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @ToString
@@ -21,7 +19,8 @@ public class Account {
     @Setter
     private int points;
     private List<Voucher> vouchersList;
-
+    @Setter
+    private boolean isBlocked = false;
     public Account(String accountNumber, String ownerName, AccountType type) {
         Validate.notEmpty(accountNumber, "account number must be filled");
         Validate.notEmpty(ownerName, "Owner name and surname must be filled");

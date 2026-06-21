@@ -14,7 +14,7 @@ public class FilesHandler {
     /**
      * The constant SAVED_ORDERS_DIRECTORY_PATH.
      */
-    public static final Path SAVED_ORDERS_DIRECTORY_PATH = Path.of("data","ORDERS");
+    public static final Path SAVED_ORDERS_DIRECTORY_PATH = Path.of("data", "ORDERS");
 
     /**
      * Saves SAVABLE object to file
@@ -23,10 +23,10 @@ public class FilesHandler {
      * @param path       the path
      * @throws IOException the io exception
      */
-    public static void saveToFile(@NonNull Savable fileToSave,@NonNull Path path) throws IOException {
+    public static void saveToFile(@NonNull Savable fileToSave, @NonNull Path path) throws IOException {
         Files.createDirectories(path);
-        String fileName =fileToSave.fileName();
+        String fileName = fileToSave.fileName();
         Path file = path.resolve(fileName);
-        Files.writeString(file,fileToSave.content());
+        Files.writeString(file, fileToSave.content());
     }
 }

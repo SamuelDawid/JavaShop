@@ -6,7 +6,6 @@ import org.javashop.domain.User.Account;
 import org.javashop.interfaces.Savable;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -28,20 +27,20 @@ public record Invoice(String invoiceNumber,
      * @param total                              the total
      * @param userInformation                    the user information
      */
-    public Invoice{
-     Validate.notEmpty(invoiceNumber,"Inv number must be filled");
-     Validate.notNull(listOfProductsWithAdjustedQuantity,"product List must be present");
-     Validate.notNull(total,"Invoice must have total amount");
-     Validate.notNull(userInformation,"Account must be assigned to Invoice");
- }
+    public Invoice {
+        Validate.notEmpty(invoiceNumber, "Inv number must be filled");
+        Validate.notNull(listOfProductsWithAdjustedQuantity, "product List must be present");
+        Validate.notNull(total, "Invoice must have total amount");
+        Validate.notNull(userInformation, "Account must be assigned to Invoice");
+    }
 
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z");
         return "Invoice " + invoiceNumber + "\n" +
                 "-issueDate:" + issueDate.format(formatter) + "\n"
-                + listOfProductsWithAdjustedQuantity + "\n"+
-                "-total: " + total +"\n"+
+                + listOfProductsWithAdjustedQuantity + "\n" +
+                "-total: " + total + "\n" +
                 "-user: " + userInformation;
     }
 
@@ -52,6 +51,6 @@ public record Invoice(String invoiceNumber,
 
     @Override
     public String fileName() {
-        return "Invoice"+this.invoiceNumber+".txt";
+        return "Invoice" + this.invoiceNumber + ".txt";
     }
 }

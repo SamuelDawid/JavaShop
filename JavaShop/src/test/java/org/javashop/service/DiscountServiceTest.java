@@ -96,22 +96,27 @@ class DiscountServiceTest {
         discountService.addVoucherToRepository(testVoucher);
         verify(repository).addVoucher(testVoucher);
     }
-    @Nested class AccountTest{
-        Account testAcc = new Account("111-111","Samuel K",AccountType.NORMAL);
+
+    @Nested
+    class AccountTest {
+        Account testAcc = new Account("111-111", "Samuel K", AccountType.NORMAL);
+
         @Test
-        void shouldAddVoucherToAccount(){
+        void shouldAddVoucherToAccount() {
             testAcc.addVoucherToAccount(testVoucher);
 
             assertThat(testAcc.getVouchersList()).hasSize(1);
             assertThat(testAcc.getVouchersList().getFirst()).isEqualTo(testVoucher);
         }
+
         @Test
-        void shouldRemoveVoucherFromAccount(){
+        void shouldRemoveVoucherFromAccount() {
             testAcc.addVoucherToAccount(testVoucher);
             assertThat(testAcc.getVouchersList()).hasSize(1);
             testAcc.removeVoucherFromAccount(testVoucher);
             assertThat(testAcc.getVouchersList()).isEmpty();
         }
+
         @Test
         void shouldRemoveExpiredOrUsedVouchers() {
             // Arrange
@@ -119,7 +124,7 @@ class DiscountServiceTest {
             LocalDate expiryDate = LocalDate.of(2026, 5, 5);
             LocalDate usedExpiry = LocalDate.of(2026, 5, 10);
             LocalDate futureDate = LocalDate.of(2026, 5, 15);
-        //ACT
+            //ACT
             try (MockedStatic<LocalDate> mockedDate = Mockito.mockStatic(LocalDate.class, Mockito.CALLS_REAL_METHODS)) {
                 mockedDate.when(LocalDate::now).thenReturn(creationDate);
 
@@ -137,43 +142,50 @@ class DiscountServiceTest {
             }
         }
     }
+
     @Nested
     class VoucherRepositoryTest {
 
         VoucherRepository repository = new InMemoryVoucherRepository();
+
         @Test
         void shouldReturnTrueForValidVoucher() {
             repository.addVoucher(testVoucher);
             assertThat(repository.validateVoucher(testVoucher)).isTrue();
         }
+
         @Test
-        void shouldThrowVoucherNotFoundExceptionWhenValidating(){
+        void shouldThrowVoucherNotFoundExceptionWhenValidating() {
             VoucherNotFoundException ex = assertThrows(VoucherNotFoundException.class, () -> repository.validateVoucher(testVoucher));
             assertThat(ex.getMessage()).isEqualTo("Voucher was not found");
         }
+
         @Test
-        void shouldDeleteVoucher(){
+        void shouldDeleteVoucher() {
             repository.addVoucher(testVoucher);
             assertThat(repository.deleteVoucher(testVoucher)).isTrue();
         }
+
         @Test
-        void shouldThrowVoucherNotFoundExceptionWhenDeleting(){
-            Voucher notfound = new Voucher("NOTFOUND",LocalDate.now().plusDays(5),10);
+        void shouldThrowVoucherNotFoundExceptionWhenDeleting() {
+            Voucher notfound = new Voucher("NOTFOUND", LocalDate.now().plusDays(5), 10);
             VoucherNotFoundException ex = assertThrows(VoucherNotFoundException.class, () -> repository.deleteVoucher(notfound));
             assertThat(ex.getMessage()).isEqualTo("Voucher was not found");
         }
+
         @Test
-        void shouldGenerateVoucher(){
+        void shouldGenerateVoucher() {
             Voucher result = repository.generateVoucher(100);
             assertAll(
                     () -> assertThat(result).isNotNull(),
                     () -> assertThat(result.voucherName()).isNotEmpty(),
-                    () ->  assertThat(result.percentage()).isGreaterThan(0),
+                    () -> assertThat(result.percentage()).isGreaterThan(0),
                     () -> assertThat(result.isUsed()).isFalse()
             );
         }
+
         @Test
-        void shouldThrowNotEnoughPointsException(){
+        void shouldThrowNotEnoughPointsException() {
             NotEnoughPointsException ex = assertThrows(NotEnoughPointsException.class, () -> repository.generateVoucher(45));
             assertThat(ex.getMessage()).isEqualTo("Not enough points");
         }

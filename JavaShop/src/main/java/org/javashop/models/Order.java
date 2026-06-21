@@ -2,12 +2,10 @@ package org.javashop.models;
 
 import org.apache.commons.lang3.Validate;
 import org.javashop.domain.User.Account;
-import org.javashop.domain.resources.Electronics;
 import org.javashop.enums.OrderStatus;
 import org.javashop.interfaces.Savable;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +37,7 @@ public record Order(Account account,
         Validate.notNull(subTotal, "Subtotal cannot be null");
         Validate.notNull(total, "total cannot be null");
         Validate.notEmpty(productsList, "Products list is empty");
-        Validate.isTrue( total.signum() > 0, "negative Total");
+        Validate.isTrue(total.signum() > 0, "negative Total");
         Validate.isTrue(total.compareTo(subTotal) <= 0, "Total cannot be greater than subtotal");
     }
 

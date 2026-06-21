@@ -67,6 +67,7 @@ public class OrderProcessor {
 
     /**
      * Submits an order for asynchronous processing using a thread pool.
+     *
      * @param order the order to process
      * @return a Future containing the generated invoice
      * @deprecated since Task14, use {@link #submitOrderAsync(Order)} instead, scheduled for removal
@@ -79,6 +80,7 @@ public class OrderProcessor {
     /**
      * Shuts down the executor service gracefully.
      * Waits up to 5 seconds for current thread is interrupted while waiting
+     *
      * @throws InterruptedException
      */
     public void shutDown() throws InterruptedException {
@@ -89,6 +91,7 @@ public class OrderProcessor {
     /**
      * Submits an order for asynchronous using CompletableFuture.
      * Preferred over {@link #processOrder(Order)} for non-blocking order handling.
+     *
      * @param order the order to process
      * @return a CompletableFuture containing the generated invoice
      */
