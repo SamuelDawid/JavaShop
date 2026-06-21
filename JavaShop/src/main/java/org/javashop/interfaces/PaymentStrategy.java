@@ -1,6 +1,4 @@
-package org.javashop.payment;
-
-import org.javashop.models.Invoice;
+package org.javashop.interfaces;
 
 import java.math.BigDecimal;
 

@@ -10,7 +10,7 @@ public record PaymentResult(String customerId,
                             boolean successful,
                             String method) {
     public PaymentResult markSuccessful() {
-        return new PaymentResult(customerId, amount, dateTime, message, true,method);
+        return new PaymentResult(customerId, amount, dateTime, message, true, method);
     }
 }
 

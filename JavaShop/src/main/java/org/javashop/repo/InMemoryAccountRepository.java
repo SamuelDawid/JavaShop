@@ -25,8 +25,7 @@ public class InMemoryAccountRepository implements AccountsRepository{
     }
 
     @Override
-    public boolean blockAccount(Account account) {
-        account.setBlocked(true);
-        return account.isBlocked();
+    public boolean blockAccount(String accountNumber) {
+        return findAccount(accountNumber).map(account -> { account.setBlocked(true); return true;}).orElse(false);
     }
 }

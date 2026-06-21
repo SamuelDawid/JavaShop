@@ -8,5 +8,5 @@ public interface AccountsRepository {
     void addAccount(Account account);
     boolean deleteAccount(Account account);
     Optional<Account> findAccount(String accountNumber);
-    boolean blockAccount(Account account);
+    boolean blockAccount(String accountNumber);
 }
