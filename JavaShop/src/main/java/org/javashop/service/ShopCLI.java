@@ -17,6 +17,7 @@ import org.javashop.models.*;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.CompletionException;
 
 
 /**
@@ -123,25 +124,25 @@ public class ShopCLI {
     }
 
     private void checkout() {
+        try {
         account.removeExpiredOrUsedVouchers();
         DiscountPolicy policy = discountPolicyFactory.forAccount(account);
         Order order = cart.checkout(policy);
-        try {
-            orderProcessor.submitOrderAsync(order)
-                    .thenAccept(inv -> {
-                        saveFiles(inv, order);
-                        this.unpaidInvoice = inv;
-                    }).exceptionally(e -> {
-                        log.error("Order checkout failed", e);
-                        return null;
-                    });
+        Invoice inv = orderProcessor.submitOrderAsync(order).join();
+        saveFiles(order,inv);
+        this.unpaidInvoice = inv;
+        payment();
         } catch (EmptyCartException e) {
             log.error("checkout failed: ", e);
+        }catch (CompletionException e) {
+            log.error("Order processing failed", e);
         }
-
     }
     private void payment(){
-        if(unpaidInvoice == null) System.out.println("Nothing to pay");
+        if(unpaidInvoice == null) {
+            System.out.println("Nothing to pay");
+            return;
+        }
         System.out.println("""
                  KARTA
                  BLIK

@@ -1,6 +1,0 @@
-Order{486b0734-67aa-43c7-916c-316e3c925f5c}account=Account(accountNumber=123, ownerName=Samuel K, type=NORMAL, points=0, vouchersList=[])
-, productsList=[Product[PC-2] Office Pro 1499.99 zł (2)]
-, dateTime=2026-06-20T14:59:32.735535+02:00[Europe/Warsaw]
-, SubTotal=2999.98
-, total=2699.98
-, status=PENDING
