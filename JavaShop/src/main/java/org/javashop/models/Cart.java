@@ -20,7 +20,7 @@ import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-
+//SRP
 /**
  * Represents a shopping cart for a customer account.
  * Supports adding/removing products, calculating totals, and checking out.

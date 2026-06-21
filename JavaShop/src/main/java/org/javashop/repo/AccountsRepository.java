@@ -3,7 +3,7 @@ package org.javashop.repo;
 import org.javashop.domain.User.Account;
 
 import java.util.Optional;
-
+//Repository
 public interface AccountsRepository {
     void addAccount(Account account);
     boolean deleteAccount(Account account);

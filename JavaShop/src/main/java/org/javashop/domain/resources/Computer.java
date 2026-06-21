@@ -7,7 +7,7 @@ import org.javashop.enums.pc.RAM;
 
 import java.math.BigDecimal;
 
-
+//Liskov Substitution
 public class Computer extends Electronics {
 
     CPU cpu;

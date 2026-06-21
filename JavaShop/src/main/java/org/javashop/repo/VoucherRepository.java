@@ -4,7 +4,7 @@ import org.javashop.models.Voucher;
 
 import java.util.Map;
 import java.util.Optional;
-
+//Repository
 public interface VoucherRepository {
     boolean validateVoucher(Voucher voucher);
     void addVoucher(Voucher voucher);

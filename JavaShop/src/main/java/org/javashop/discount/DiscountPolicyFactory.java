@@ -7,7 +7,7 @@ import org.javashop.interfaces.DiscountPolicy;
 import org.javashop.service.DiscountService;
 
 import java.util.Map;
-
+//Factory
 @RequiredArgsConstructor
 public class DiscountPolicyFactory {
     private final Map<AccountType, DiscountPolicy> policies;

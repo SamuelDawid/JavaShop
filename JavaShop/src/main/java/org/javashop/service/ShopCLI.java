@@ -140,7 +140,7 @@ public class ShopCLI {
     }
     private void payment(){
         if(unpaidInvoice == null) {
-            System.out.println("Nothing to pay");
+            log.info("Nothing to pay");
             return;
         }
         System.out.println("""
@@ -152,6 +152,7 @@ public class ShopCLI {
         PaymentResult result = paymentService.pay(chosenMethod,unpaidInvoice.total(),unpaidInvoice.userInformation().getAccountNumber(), unpaidInvoice.invoiceNumber());
         if(result.successful()) unpaidInvoice = null;
     }
+    //SRP
     private void saveFiles(Savable inv, Savable order) {
         try {
             FilesHandler.saveToFile(inv, FilesHandler.SAVED_ORDERS_DIRECTORY_PATH);

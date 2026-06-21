@@ -13,14 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-
+//Dependency Inversion
+//Facade
 @Slf4j
 @RequiredArgsConstructor
 public class PaymentService {
     private final Map<String, PaymentStrategy> methods;
+    //Chain of Responsibility
     private final List<Validator> validators;
     private final List<Consumer<PaymentResult>> listeners = new ArrayList<>();
-
+    //Observer
     public void onPayment(Consumer<PaymentResult> listener) {
         listeners.add(listener);
     }
