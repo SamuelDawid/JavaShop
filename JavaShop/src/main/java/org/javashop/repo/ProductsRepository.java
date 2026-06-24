@@ -1,10 +1,12 @@
 package org.javashop.repo;
 
 import org.javashop.domain.resources.Electronics;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 //Repository
+
 public interface ProductsRepository {
     Optional<Electronics> findById(String id);
     List<Electronics> findAll();

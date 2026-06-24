@@ -1,6 +1,7 @@
 package org.javashop.repo;
 
 import org.javashop.models.Voucher;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.Optional;

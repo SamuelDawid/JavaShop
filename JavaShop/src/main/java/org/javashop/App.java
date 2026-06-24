@@ -20,11 +20,12 @@ import org.javashop.repo.InMemoryVoucherRepository;
 import org.javashop.service.*;
 import org.javashop.validators.AmountValidator;
 import org.javashop.validators.NotBlockedValidator;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
+@SpringBootApplication
 public class App {
     public static void main(String[] args) throws InterruptedException {
 

@@ -9,6 +9,7 @@ import org.javashop.domain.resources.Electronics;
 import org.javashop.models.Invoice;
 import org.javashop.models.InvoiceLine;
 import org.javashop.models.Order;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -20,9 +21,7 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Processes orders and generates invoices
- */
+@Service
 @RequiredArgsConstructor
 public class OrderProcessor {
     private final ProductManager productManager;

@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15abcfb5-e685-46f0-9118-bccf2c556a3a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JavaShop/src/main/java/org/javashop/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/JavaShop/src/main/java/org/javashop/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +12,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="108" />
+    <option name="cachedIndexableFilesCount" value="149" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -24,10 +21,69 @@
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 1
-}]]></component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="2.0077788398431986" />
+      <entry key="MS500" value="4.170730809597869" />
+      <entry key="S2" value="8.270727884604373" />
+      <entry key="S5" value="14.413469655746576" />
+      <entry key="S10" value="19.85034034278711" />
+      <entry key="S30" value="25.861506645802365" />
+      <entry key="S60" value="27.816278386662074" />
+      <entry key="M2" value="28.87773663003921" />
+      <entry key="M5" value="29.543556139212548" />
+      <entry key="M10" value="29.770500898062874" />
+      <entry key="M15" value="29.84671522382664" />
+      <entry key="M30" value="29.92321453260944" />
+      <entry key="H1" value="29.961571422804994" />
+      <entry key="H2" value="29.98077674130085" />
+      <entry key="H4" value="29.990386126970577" />
+      <entry key="D1" value="29.9983973761082" />
+      <entry key="W1" value="29.99977104609451" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.9652918953502312" />
+      <entry key="MS500" value="4.152178258768013" />
+      <entry key="S2" value="8.258607641403492" />
+      <entry key="S5" value="14.401445541490883" />
+      <entry key="S10" value="19.840542213426666" />
+      <entry key="S30" value="25.856718176323813" />
+      <entry key="S60" value="27.813626004214694" />
+      <entry key="M2" value="28.87633942911129" />
+      <entry key="M5" value="29.542979317329713" />
+      <entry key="M10" value="29.770209418789367" />
+      <entry key="M15" value="29.84652021655963" />
+      <entry key="M30" value="29.923116683613966" />
+      <entry key="H1" value="29.96152241168701" />
+      <entry key="H2" value="29.980752214051734" />
+      <entry key="H4" value="29.990373857919103" />
+      <entry key="D1" value="29.998395330512178" />
+      <entry key="W1" value="29.999770753848036" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="3FONv1kZPBK7I7PBci4AeJdf7fN" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -38,11 +94,14 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "Task10-15",
+    "git-widget-placeholder": "addSpring",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/JavaShop",
+    "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.sourceCode",
     "vue.rearranger.settings.migration": "true"
   }
@@ -63,6 +122,7 @@
       <option name="presentableId" value="Default" />
       <updated>1781942383711</updated>
       <workItem from="1781942386003" duration="20000" />
+      <workItem from="1782294201352" duration="191000" />
     </task>
     <servers />
   </component>

@@ -12,15 +12,14 @@ import org.javashop.enums.AccountType;
 import org.javashop.interfaces.DiscountCalculations;
 import org.javashop.models.Voucher;
 import org.javashop.repo.VoucherRepository;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * The type Discount service.
- */
+@Service
 @RequiredArgsConstructor
 public class DiscountService implements DiscountCalculations {
     private final VoucherRepository voucherRepository;

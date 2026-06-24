@@ -2,14 +2,13 @@ package org.javashop.service;
 
 import lombok.NonNull;
 import org.javashop.interfaces.Savable;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/**
- * The type Files handler.
- */
+@Component
 public class FilesHandler {
     /**
      * The constant SAVED_ORDERS_DIRECTORY_PATH.

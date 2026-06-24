@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.javashop.interfaces.PaymentStrategy;
 import org.javashop.interfaces.Validator;
 import org.javashop.models.PaymentResult;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 //Dependency Inversion
 //Facade
+@Service
 @Slf4j
 @RequiredArgsConstructor
 public class PaymentService {

@@ -6,13 +6,13 @@ import org.javashop.Exceptions.ProductAlreadyExists;
 import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.repo.ProductsRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
-
+@Service
 public class ProductManager {
     private final ProductsRepository productsRepository;
 

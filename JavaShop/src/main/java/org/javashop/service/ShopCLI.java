@@ -14,17 +14,14 @@ import org.javashop.interfaces.DiscountPolicy;
 import org.javashop.interfaces.Savable;
 import org.javashop.menu.MenuManager;
 import org.javashop.models.*;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.CompletionException;
 
 
-/**
- * Command-line interface for the shop application.
- * Handles user interaction for browsing products, managing cart,
- * checkout, account info, and loyalty points exchange.
- */
+@Component
 @Slf4j
 @RequiredArgsConstructor
 public class ShopCLI {

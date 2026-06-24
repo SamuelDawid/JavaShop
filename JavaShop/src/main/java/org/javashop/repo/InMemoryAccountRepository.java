@@ -2,11 +2,12 @@ package org.javashop.repo;
 
 import lombok.NonNull;
 import org.javashop.domain.User.Account;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
+@Repository
 public class InMemoryAccountRepository implements AccountsRepository{
     private final Map<String,Account> accountMap = new HashMap<>();
     @Override

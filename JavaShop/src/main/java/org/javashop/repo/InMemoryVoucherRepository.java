@@ -6,15 +6,14 @@ import org.javashop.Exceptions.NotEnoughPointsException;
 import org.javashop.Exceptions.VoucherAlreadyExistsException;
 import org.javashop.Exceptions.VoucherNotFoundException;
 import org.javashop.models.Voucher;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
 
-/**
- * In-memory implementation of {@link VoucherRepository} backed by a HashSet
- */
+@Repository
 public class InMemoryVoucherRepository implements VoucherRepository {
     /**
      * The List of vouchers available.

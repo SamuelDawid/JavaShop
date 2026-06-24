@@ -3,6 +3,7 @@ package org.javashop.repo;
 import lombok.NonNull;
 import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.domain.resources.Electronics;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * In-memory implemenation of {@link ProductsRepository} backed by a HashMap
- */
+@Repository
 public class InMemoryProductRepository implements ProductsRepository {
     private final Map<String, Electronics> electronicsList = new ConcurrentHashMap<>();
 
