@@ -33,7 +33,9 @@ public class ProductManager {
                 productsRepository.save(e);
         }
     }
+    public void createProduct(){
 
+    }
     /**
      * Adds single Product provided to the repository
      * Duplicate products (same ID) are silently ignored.
@@ -41,22 +43,9 @@ public class ProductManager {
      * @param product provided Product
      * @throws NullPointerException if provided product is null
      */
-    public void addProduct(@NonNull Electronics product) {
+    public Electronics addProduct(@NonNull Electronics product) {
         if (productsRepository.findAll().contains(product)) throw new ProductAlreadyExists(product);
-        productsRepository.save(product);
-    }
-
-    /**
-     * Replaces an existing product in the repository with the provided product.
-     *
-     * @param id      the ID of the product to update
-     * @param product the new product data to replace the existing one
-     * @throws ProductNotFoundException if no product exists with the given ID
-     * @throws NullPointerException     if product is null
-     */
-    public void modify(String id, @NonNull Electronics product) {
-        productsRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-        productsRepository.update(id, product);
+       return productsRepository.save(product);
     }
 
     /**
@@ -75,12 +64,8 @@ public class ProductManager {
      *
      * @return nicely formated list of products as a description
      */
-    public List<String> returnAllProducts() {
-        List<String> listToReturn = new ArrayList<>();
-        for (Electronics product : productsRepository.findAll()) {
-            listToReturn.add(product.toString());
-        }
-        return listToReturn;
+    public List<Electronics> findAll() {
+        return productsRepository.findAll();
     }
 
     /**
@@ -99,9 +84,9 @@ public class ProductManager {
      * If not method will return false
      *
      * @param id the ID of product to delete
-     * @return true if deleted successfully, false otherwise
      */
-    public boolean delete(String id) {
-        return productsRepository.delete(id);
+    public void delete(String id) {
+        Electronics productToDelete = Optional.of(productsRepository.findById(id)).get().orElseThrow(() -> new ProductNotFoundException(id));
+        productsRepository.delete(productToDelete);
     }
 }

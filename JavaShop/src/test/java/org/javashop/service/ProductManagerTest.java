@@ -9,7 +9,6 @@ import org.javashop.enums.phone.BATTERY;
 import org.javashop.domain.resources.Computer;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.domain.resources.SmartPhone;
-import org.javashop.repo.InMemoryProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -1,25 +1,29 @@
 package org.javashop.domain.resources;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.Validate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Optional;
 
-//Builder
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "product_type")
 @Getter
-@SuperBuilder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Electronics {
-    @EqualsAndHashCode.Include
+    @Id
     private String id;
     private String name;
     @Setter
+    @Column(precision = 12, scale = 2)
     private BigDecimal price;
     @Setter
     private int quantity;
+
+    protected Electronics() {
+    }
 
     public Electronics(String id, String name, BigDecimal price, int quantity) {
         Validate.notBlank(name, "Name can not be blank");

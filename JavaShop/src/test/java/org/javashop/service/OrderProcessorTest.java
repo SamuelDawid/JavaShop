@@ -11,7 +11,7 @@ import org.javashop.interfaces.DiscountPolicy;
 import org.javashop.models.Cart;
 import org.javashop.models.Invoice;
 import org.javashop.models.Order;
-import org.javashop.repo.InMemoryProductRepository;
+import org.javashop.repo.ProductsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,8 @@ class OrderProcessorTest {
 
     @Nested
     class ProductRepositoryTest {
-        InMemoryProductRepository productRepository = new InMemoryProductRepository();
+        ProductsRepository productRepository = new ProductsRepository() {
+        };
 
         @Test
         void shouldReturnTrueIfProductSaved() {
