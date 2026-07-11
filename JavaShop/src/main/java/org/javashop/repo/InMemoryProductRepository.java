@@ -15,12 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InMemoryProductRepository implements ProductsRepository {
     private final Map<String, Electronics> electronicsList = new ConcurrentHashMap<>();
 
-    /**
-     * Finds a product by its ID.
-     *
-     * @param id the product ID to search for
-     * @return an Optional of the product if found,or empty if not found
-     */
     @Override
     public Optional<Electronics> findById(String id) {
         return Optional.ofNullable(electronicsList.get(id));

@@ -6,6 +6,8 @@ import org.apache.commons.lang3.Validate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Optional;
+
 //Builder
 @Getter
 @SuperBuilder
@@ -28,7 +30,6 @@ public class Electronics {
         this.name = name;
         this.price = price.setScale(2, RoundingMode.HALF_UP);
         this.quantity = quantity;
-
     }
 
     @Override

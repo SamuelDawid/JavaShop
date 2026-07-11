@@ -37,3 +37,14 @@ build/
 
 ### Mac OS ###
 .DS_Store.idea/
+
+# IntelliJ IDEA - wszystkie .idea foldery gdziekolwiek w projekcie
+.idea/
+*.iml
+
+# Maven
+target/
+
+# Build artifacts
+*.class
+*.jar

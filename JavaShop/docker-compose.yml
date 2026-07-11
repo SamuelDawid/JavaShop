@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: javashop-db
+    environment:
+      POSTGRES_DB: javashop
+      POSTGRES_USER: javashop
+      POSTGRES_PASSWORD: javashop
+    ports:
+      - "5432:5432"
+    volumes:
+      - javashop-data:/var/lib/postgresql/data
+
+volumes:
+  javashop-data:
