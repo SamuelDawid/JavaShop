@@ -1,6 +1,9 @@
 package org.javashop.domain.User;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.lang3.Validate;
 import org.javashop.enums.AccountType;
 import org.javashop.models.Voucher;
@@ -12,6 +15,7 @@ import java.util.List;
 @ToString
 @Getter
 public class Account {
+
     private final String accountNumber;
     private final String ownerName;
     @Setter
@@ -21,6 +25,7 @@ public class Account {
     private List<Voucher> vouchersList;
     @Setter
     private boolean isBlocked = false;
+
     public Account(String accountNumber, String ownerName, AccountType type) {
         Validate.notEmpty(accountNumber, "account number must be filled");
         Validate.notEmpty(ownerName, "Owner name and surname must be filled");

@@ -12,6 +12,7 @@ import org.javashop.domain.User.Account;
 import org.javashop.domain.resources.Electronics;
 import org.javashop.enums.OrderStatus;
 import org.javashop.interfaces.DiscountPolicy;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -25,6 +26,7 @@ import java.util.UUID;
  * Represents a shopping cart for a customer account.
  * Supports adding/removing products, calculating totals, and checking out.
  */
+
 @ToString
 @Getter
 public class Cart {

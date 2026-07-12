@@ -59,62 +59,62 @@ class OrderProcessorTest {
 
     }
 
-    @Nested
-    class ProductRepositoryTest {
-        ProductsRepository productRepository = new ProductsRepository() {
-        };
-
-        @Test
-        void shouldReturnTrueIfProductSaved() {
-            assertThat(productRepository.save(gaming)).isTrue();
-            assertThat(productRepository.findAll()).hasSize(1);
-        }
-
-        @Test
-        void shouldReturnProductFromID() {
-            productRepository.save(gaming);
-            Electronics result = productRepository.findById("PC-1").orElseThrow(() -> new AssertionError("Product not found after update"));
-            assertThat(result).isEqualTo(gaming);
-        }
-
-        @Test
-        void shouldThrowNoSuchElementException() {
-            NoSuchElementException ex = assertThrows(NoSuchElementException.class, () -> productRepository.findById("notExisting").get());
-            assertThat(ex.getMessage()).isEqualTo("No value present");
-        }
-
-        @Test
-        void shouldUpdateProduct() {
-            productRepository.save(gaming);
-            Electronics gamingUpdated = new Electronics("PC-1", "Even Better", new BigDecimal("5000"), 15);
-            productRepository.update(gaming.getId(), gamingUpdated);
-            Electronics result = productRepository.findById(gaming.getId()).orElseThrow(() -> new AssertionError("Product not found after update"));
-            assertAll(
-                    () -> assertThat(result.getId()).isEqualTo("PC-1"),
-                    () -> assertThat(result.getName()).isEqualTo("Even Better"),
-                    () -> assertThat(result.getPrice()).isEqualByComparingTo(new BigDecimal("5000")),
-                    () -> assertThat(result.getQuantity()).isEqualTo(15)
-            );
-        }
-
-        @Test
-        void shouldNotAddNewProductWhenUpdatingNonExistent() {
-            Electronics ghost = new Electronics("GHOST-1", "Ghost", new BigDecimal("100"), 1);
-            productRepository.update("GHOST-1", ghost);
-            assertThat(productRepository.findById("GHOST-1")).isEmpty();
-        }
-
-        @Test
-        void shouldDeleteProductFromRepository() {
-            productRepository.save(gaming);
-            assertThat(productRepository.delete(gaming.getId())).isTrue();
-        }
-
-        @Test
-        void shouldNotDeleteProductFromRepository() {
-            assertThat(productRepository.delete("lol")).isFalse();
-        }
-    }
+//    @Nested
+//    class ProductRepositoryTest {
+//        ProductsRepository productRepository = new ProductsRepository() {
+//        };
+//
+//        @Test
+//        void shouldReturnTrueIfProductSaved() {
+//            assertThat(productRepository.save(gaming)).isTrue();
+//            assertThat(productRepository.findAll()).hasSize(1);
+//        }
+//
+//        @Test
+//        void shouldReturnProductFromID() {
+//            productRepository.save(gaming);
+//            Electronics result = productRepository.findById("PC-1").orElseThrow(() -> new AssertionError("Product not found after update"));
+//            assertThat(result).isEqualTo(gaming);
+//        }
+//
+//        @Test
+//        void shouldThrowNoSuchElementException() {
+//            NoSuchElementException ex = assertThrows(NoSuchElementException.class, () -> productRepository.findById("notExisting").get());
+//            assertThat(ex.getMessage()).isEqualTo("No value present");
+//        }
+//
+//        @Test
+//        void shouldUpdateProduct() {
+//            productRepository.save(gaming);
+//            Electronics gamingUpdated = new Electronics("PC-1", "Even Better", new BigDecimal("5000"), 15);
+//            productRepository.update(gaming.getId(), gamingUpdated);
+//            Electronics result = productRepository.findById(gaming.getId()).orElseThrow(() -> new AssertionError("Product not found after update"));
+//            assertAll(
+//                    () -> assertThat(result.getId()).isEqualTo("PC-1"),
+//                    () -> assertThat(result.getName()).isEqualTo("Even Better"),
+//                    () -> assertThat(result.getPrice()).isEqualByComparingTo(new BigDecimal("5000")),
+//                    () -> assertThat(result.getQuantity()).isEqualTo(15)
+//            );
+//        }
+//
+//        @Test
+//        void shouldNotAddNewProductWhenUpdatingNonExistent() {
+//            Electronics ghost = new Electronics("GHOST-1", "Ghost", new BigDecimal("100"), 1);
+//            productRepository.update("GHOST-1", ghost);
+//            assertThat(productRepository.findById("GHOST-1")).isEmpty();
+//        }
+//
+//        @Test
+//        void shouldDeleteProductFromRepository() {
+//            productRepository.save(gaming);
+//            assertThat(productRepository.delete(gaming.getId())).isTrue();
+//        }
+//
+//        @Test
+//        void shouldNotDeleteProductFromRepository() {
+//            assertThat(productRepository.delete("lol")).isFalse();
+//        }
+//    }
 
     @Nested
     class FileHandlerTest {

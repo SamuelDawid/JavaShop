@@ -16,7 +16,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 //Dependency Inversion
 //Facade
-@Service
 @Slf4j
 @RequiredArgsConstructor
 public class PaymentService {

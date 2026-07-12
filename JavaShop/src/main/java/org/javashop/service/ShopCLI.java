@@ -21,7 +21,6 @@ import java.util.Scanner;
 import java.util.concurrent.CompletionException;
 
 
-@Component
 @Slf4j
 @RequiredArgsConstructor
 public class ShopCLI {
@@ -91,7 +90,7 @@ public class ShopCLI {
     }
 
     private void showProducts() {
-        for (String item : productManager.returnAllProducts())
+        for (Electronics item : productManager.findAll())
             System.out.println(item);
     }
 

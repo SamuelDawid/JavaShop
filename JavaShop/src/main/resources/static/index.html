@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaShop</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="#" class="nav-brand" data-view="home">Java<span>Shop</span></a>
+    <ul class="nav-links">
+        <li><a href="#" class="nav-link active" data-view="home">Strona główna</a></li>
+        <li><a href="#" class="nav-link" data-view="account">Konto</a></li>
+        <li>
+            <a href="#" class="nav-link" data-view="cart">
+                Koszyk <span class="cart-count" id="cart-count">0</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<main class="container">
+
+    <!-- STRONA GŁÓWNA -->
+    <section id="view-home" class="view active">
+        <h1>Produkty</h1>
+        <p id="status" class="status">Ładowanie produktów…</p>
+        <div id="product-grid" class="product-grid"></div>
+    </section>
+
+    <!-- KONTO -->
+    <section id="view-account" class="view">
+        <h1>Konto</h1>
+        <p class="placeholder">Sekcja konta — dodamy ją wkrótce.</p>
+    </section>
+
+    <!-- KOSZYK -->
+    <section id="view-cart" class="view">
+        <h1>Koszyk</h1>
+        <p class="placeholder">Koszyk jest pusty. Funkcjonalność dodamy wkrótce.</p>
+    </section>
+
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

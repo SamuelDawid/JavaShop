@@ -33,8 +33,9 @@ public class ProductManager {
                 productsRepository.save(e);
         }
     }
-    public void createProduct(){
-
+    public Electronics update(String id, Electronics newData){
+        if(!productsRepository.existsById(id)) throw new ProductNotFoundException(id);
+        return productsRepository.save(newData);
     }
     /**
      * Adds single Product provided to the repository

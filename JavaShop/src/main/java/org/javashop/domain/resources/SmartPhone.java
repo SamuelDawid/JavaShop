@@ -22,7 +22,7 @@ public class SmartPhone extends Electronics {
 
     @Enumerated(EnumType.STRING)
     Colour colour;
-
+    public SmartPhone() {}
     public SmartPhone(String id, String name, BigDecimal price, int quantity, BATTERY battery, Colour colour) {
         super(id, name, price, quantity);
         Validate.notNull(battery.name(), "Please select valid battery type");

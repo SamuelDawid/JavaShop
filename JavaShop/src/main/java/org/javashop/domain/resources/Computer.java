@@ -20,7 +20,7 @@ public class Computer extends Electronics {
     GPU gpu;
     @Enumerated(EnumType.STRING)
     RAM ram;
-
+    public  Computer(){}
     public Computer(String id, String name, BigDecimal price, int quantity, CPU cpu, GPU gpu, RAM ram) {
         super(id, name, price, quantity);
         Validate.notNull(cpu.name(), "Please select valid CPU");
