@@ -1,8 +1,8 @@
 package org.javashop.web;
 
 import org.javashop.domain.resources.Electronics;
-import org.javashop.dto.CreateProductRequest;
-import org.javashop.dto.ProductResponse;
+import org.javashop.dto.productDTO.CreateProductRequest;
+import org.javashop.dto.productDTO.ProductResponse;
 import org.javashop.service.ProductManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

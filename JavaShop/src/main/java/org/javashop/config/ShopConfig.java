@@ -2,7 +2,6 @@ package org.javashop.config;
 
 import org.javashop.interfaces.PaymentStrategy;
 import org.javashop.interfaces.Validator;
-import org.javashop.models.Cart;
 import org.javashop.repo.AccountsRepository;
 import org.javashop.service.PaymentService;
 import org.javashop.validators.AmountValidator;

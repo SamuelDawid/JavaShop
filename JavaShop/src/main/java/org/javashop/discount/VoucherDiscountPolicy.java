@@ -18,7 +18,7 @@ public class VoucherDiscountPolicy implements DiscountPolicy {
     @Override
     public BigDecimal apply(Cart cart, Account account) {
         Optional<Voucher> biggest = account.getVouchersList().stream()
-                .max(Comparator.comparingInt(Voucher::percentage));
+                .max(Comparator.comparingInt(Voucher::getPercentage));
         if (biggest.isEmpty()) {
             return cart.getCartTotal(); // nothing to apply
         }

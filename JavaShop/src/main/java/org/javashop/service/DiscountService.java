@@ -23,7 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DiscountService implements DiscountCalculations {
     private final VoucherRepository voucherRepository;
-    private static final BigDecimal COMPANY_DISCOUNT_AMMOUNT = new BigDecimal("0.93");
+    private static final BigDecimal COMPANY_DISCOUNT_AMOUNT = new BigDecimal("0.93");
     /**
      * Applies a 7% discount for company accounts.
      * Throws an exception if the account type is not COMPANY
@@ -36,7 +36,7 @@ public class DiscountService implements DiscountCalculations {
     @Override
     public BigDecimal applyCompany(@NonNull BigDecimal basePrice, @NonNull AccountType type) {
         if (type != AccountType.COMPANY) throw new OnlyCompanyAccountDiscountException();
-        return basePrice.multiply(COMPANY_DISCOUNT_AMMOUNT).setScale(2, RoundingMode.HALF_UP);
+        return basePrice.multiply(COMPANY_DISCOUNT_AMOUNT).setScale(2, RoundingMode.HALF_UP);
     }
 
     /**
@@ -51,7 +51,7 @@ public class DiscountService implements DiscountCalculations {
     @Override
     public BigDecimal applyVoucher(@NonNull BigDecimal basePrice, @NonNull Voucher voucher) {
         if (!voucherRepository.validateVoucher(voucher)) throw new InvalidVoucherException();
-        BigDecimal discountFraction = BigDecimal.valueOf(voucher.percentage())
+        BigDecimal discountFraction = BigDecimal.valueOf(voucher.getPercentage())
                 .divide(new BigDecimal(100), 4, RoundingMode.HALF_UP);
         BigDecimal discountAmount = basePrice.multiply(discountFraction);
         return basePrice.subtract(discountAmount).setScale(2, RoundingMode.HALF_UP);
