@@ -11,7 +11,6 @@ import org.javashop.domain.User.Account;
 import org.javashop.enums.AccountType;
 import org.javashop.interfaces.DiscountCalculations;
 import org.javashop.models.Voucher;
-import org.javashop.repo.VoucherRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,7 +21,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class DiscountService implements DiscountCalculations {
-    private final VoucherRepository voucherRepository;
+    private final VoucherService service;
     private static final BigDecimal COMPANY_DISCOUNT_AMOUNT = new BigDecimal("0.93");
     /**
      * Applies a 7% discount for company accounts.
@@ -50,7 +49,7 @@ public class DiscountService implements DiscountCalculations {
      */
     @Override
     public BigDecimal applyVoucher(@NonNull BigDecimal basePrice, @NonNull Voucher voucher) {
-        if (!voucherRepository.validateVoucher(voucher)) throw new InvalidVoucherException();
+        if (!service.validateVoucher(voucher)) throw new InvalidVoucherException();
         BigDecimal discountFraction = BigDecimal.valueOf(voucher.getPercentage())
                 .divide(new BigDecimal(100), 4, RoundingMode.HALF_UP);
         BigDecimal discountAmount = basePrice.multiply(discountFraction);
@@ -73,7 +72,7 @@ public class DiscountService implements DiscountCalculations {
     public Voucher exchangePoints(@NonNull Account account, int points) {
         Validate.isTrue(points > 0, "points amount can not be negative");
         if (account.getType() == AccountType.COMPANY) throw new NotAvailableForCompanyAccountsException();
-        return voucherRepository.generateVoucher(points);
+        return service.generateVoucher(points);
     }
 
     /**
@@ -82,7 +81,7 @@ public class DiscountService implements DiscountCalculations {
      * @return Returns an unmodifiable map where key is points amount and value is discount percentage
      */
     public Map<Integer, Integer> getPointsToDiscount() {
-        return Collections.unmodifiableMap(voucherRepository.getPointsToDiscount());
+        return Collections.unmodifiableMap(service.getPointsToDiscount());
     }
 
     /**
@@ -93,7 +92,7 @@ public class DiscountService implements DiscountCalculations {
      * @return the maximum available discount percentage, or 0 if non-available
      */
     public int getMaxAvailableDiscount(int currentPoints) {
-        return voucherRepository.getPointsToDiscount().entrySet().stream()
+        return service.getPointsToDiscount().entrySet().stream()
                 .filter(e -> e.getKey() <= currentPoints)
                 .mapToInt(Map.Entry::getValue)
                 .max()
@@ -108,7 +107,7 @@ public class DiscountService implements DiscountCalculations {
      * @throws NoSuchDiscountException if no tier exists for the given discount percentage
      */
     public int getPointsForDiscount(int discountPercent) {
-        return voucherRepository.getPointsToDiscount().entrySet().stream()
+        return service.getPointsToDiscount().entrySet().stream()
                 .filter(e -> e.getValue().equals(discountPercent))
                 .map(Map.Entry::getKey)
                 .findFirst()
@@ -121,6 +120,6 @@ public class DiscountService implements DiscountCalculations {
      * @param voucher the voucher
      */
     public void addVoucherToRepository(@NonNull Voucher voucher) {
-        voucherRepository.addVoucher(voucher);
+        service.addVoucher(voucher);
     }
 }

@@ -7,10 +7,7 @@ import org.javashop.models.Voucher;
 import org.javashop.service.VoucherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,9 +26,21 @@ public class VoucherController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VoucherResponse> create(@RequestBody CreateVoucherRequest request) {
-        Voucher newVoucher = new Voucher(request.voucherName(), request.expirationDate(), request.percentage());
-        voucherService.addVoucher(newVoucher);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new VoucherResponse(newVoucher.getId(), newVoucher.getVoucherName(), newVoucher.getExpirationDate(), newVoucher.getPercentage(), newVoucher.isUsed()));
+    public ResponseEntity<VoucherResponse> byId(@PathVariable long id) {
+        return voucherService.findById(id).map(VoucherMapper::toRespone).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
+
+    @PostMapping
+    public ResponseEntity<VoucherResponse> create(@RequestBody CreateVoucherRequest request){
+            Voucher newVoucher = new Voucher(request.voucherName(), request.expirationDate(), request.percentage());
+            voucherService.addVoucher(newVoucher);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new VoucherResponse(newVoucher.getId(), newVoucher.getVoucherName(), newVoucher.getExpirationDate(), newVoucher.getPercentage(), newVoucher.isUsed()));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id){
+        if(voucherService.findById(id).isEmpty()) return ResponseEntity.notFound().build();
+        voucherService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

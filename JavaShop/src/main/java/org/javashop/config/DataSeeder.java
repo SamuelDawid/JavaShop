@@ -7,19 +7,23 @@ import org.javashop.enums.pc.CPU;
 import org.javashop.enums.pc.GPU;
 import org.javashop.enums.pc.RAM;
 import org.javashop.enums.phone.BATTERY;
+import org.javashop.models.Voucher;
 import org.javashop.service.ProductManager;
+import org.javashop.service.VoucherService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
 public class DataSeeder implements CommandLineRunner {
     private final ProductManager productManager;
-
-    public DataSeeder(ProductManager productManager) {
+    private final VoucherService voucherService;
+    public DataSeeder(ProductManager productManager, VoucherService voucherService) {
         this.productManager = productManager;
+        this.voucherService = voucherService;
     }
 
     @Override
@@ -37,6 +41,12 @@ public class DataSeeder implements CommandLineRunner {
                 new SmartPhone("PH-3", "Xiaomi 13", new BigDecimal("999.99"), 15,
                         BATTERY.mAh_5000, Colour.GREEN)));
 
+        //endregion
+        //regionVoucehrs
+            voucherService.addVoucher(new Voucher("XMAX", LocalDate.of(2026,7,20),15));
+            voucherService.addVoucher(new Voucher("SUMMER15", LocalDate.of(2026,7,20),15));
+            voucherService.addVoucher(new Voucher("SUMMER5", LocalDate.of(2026,7,20),5));
+            voucherService.addVoucher(new Voucher("SUMMER10", LocalDate.of(2026,7,20),10));
         //endregion
     }
 }

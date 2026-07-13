@@ -11,7 +11,6 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "vouchers")
-@Builder
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +30,7 @@ public class Voucher {
 
     public Voucher() {}
 
+    @Builder
     public Voucher(String voucherName, LocalDate expirationDate, int percentage) {
         Validate.notEmpty(voucherName, "voucher can not be empty");
         Validate.notNull(expirationDate, "expiraton date can not be null");
