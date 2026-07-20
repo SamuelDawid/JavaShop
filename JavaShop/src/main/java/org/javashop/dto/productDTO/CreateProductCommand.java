@@ -2,7 +2,7 @@ package org.javashop.dto.productDTO;
 
 import java.math.BigDecimal;
 
-public record CreateProductRequest(
+public record CreateProductCommand(
         String id,
         String name,
         BigDecimal price,

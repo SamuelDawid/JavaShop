@@ -2,23 +2,24 @@ package org.javashop.service;
 
 
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.javashop.Exceptions.ProductAlreadyExists;
 import org.javashop.Exceptions.ProductNotFoundException;
 import org.javashop.domain.resources.Electronics;
+import org.javashop.dto.productDTO.CreateProductCommand;
+import org.javashop.dto.productDTO.ProductDto;
+import org.javashop.mapper.ProductMapper;
 import org.javashop.repo.ProductsRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class ProductManager {
     private final ProductsRepository productsRepository;
-
-    public ProductManager(ProductsRepository productsRepository) {
-        this.productsRepository = productsRepository;
-    }
+    private final ProductMapper mapper;
 
     /**
      * Adds all Products from the provided list to the repository.
@@ -27,26 +28,29 @@ public class ProductManager {
      * @param list list of products
      * @throws NullPointerException if list is null
      */
-    public void addAllProducts(@NonNull List<Electronics> list) {
+    public void addProducts(@NonNull List<Electronics> list) {
         if (!list.isEmpty()) {
             for (Electronics e : list)
                 productsRepository.save(e);
         }
     }
-    public Electronics update(String id, Electronics newData){
-        if(!productsRepository.existsById(id)) throw new ProductNotFoundException(id);
-        return productsRepository.save(newData);
+
+    public ProductDto update(String id, CreateProductCommand productCommand) {
+        if (!productsRepository.existsById(id)) {
+            throw new ProductNotFoundException(id);
+        }
+        Electronics updated = mapper.toEntity(productCommand);
+        productsRepository.save(updated);
+        return mapper.toResponse(updated);
     }
-    /**
-     * Adds single Product provided to the repository
-     * Duplicate products (same ID) are silently ignored.
-     *
-     * @param product provided Product
-     * @throws NullPointerException if provided product is null
-     */
-    public Electronics addProduct(@NonNull Electronics product) {
-        if (productsRepository.findAll().contains(product)) throw new ProductAlreadyExists(product);
-       return productsRepository.save(product);
+
+    public ProductDto addProduct(@NonNull CreateProductCommand productCommand) {
+        Electronics newItem = mapper.toEntity(productCommand);
+        if (productsRepository.findAll().contains(newItem)) {
+            throw new ProductAlreadyExists(newItem);
+        }
+        productsRepository.save(newItem);
+        return mapper.toResponse(newItem);
     }
 
     /**
@@ -60,34 +64,17 @@ public class ProductManager {
         return productsRepository.decreaseStock(id, requestedQty);
     }
 
-    /**
-     * Returns a list of all Products available in the repository as a String
-     *
-     * @return nicely formated list of products as a description
-     */
-    public List<Electronics> findAll() {
-        return productsRepository.findAll();
+    public List<ProductDto> findAll() {
+        return productsRepository.findAll().stream().map(mapper::toResponse).toList();
     }
 
-    /**
-     * Returns Optional of a product from repository.
-     * If no product found returns Optional.empty()
-     *
-     * @param id the ID of a product to find
-     * @return Optional of a product
-     */
-    public Optional<Electronics> findById(String id) {
-        return productsRepository.findById(id);
+    public Optional<ProductDto> findById(String id) {
+        return productsRepository.findById(id).map(mapper::toResponse);
     }
 
-    /**
-     * Return true if a product with provided ID was successfully deleted from repository
-     * If not method will return false
-     *
-     * @param id the ID of product to delete
-     */
     public void delete(String id) {
-        Electronics productToDelete = Optional.of(productsRepository.findById(id)).get().orElseThrow(() -> new ProductNotFoundException(id));
+        Electronics productToDelete = Optional.of(productsRepository.findById(id)).get()
+                .orElseThrow(() -> new ProductNotFoundException(id));
         productsRepository.delete(productToDelete);
     }
 }

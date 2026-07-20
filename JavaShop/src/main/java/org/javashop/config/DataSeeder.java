@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
 
 @Component
@@ -29,7 +31,7 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args){
 //regionProducts
-        productManager.addAllProducts(List.of(
+        productManager.addProducts(List.of(
                 new Computer("PC-1", "Gaming Beast", new BigDecimal("3999.99"), 5,
                         CPU.AMD, GPU.NVIDIA, RAM.GB32),
                 new Computer("PC-2", "Office Pro", new BigDecimal("1499.99"), 10,
@@ -43,10 +45,12 @@ public class DataSeeder implements CommandLineRunner {
 
         //endregion
         //regionVoucehrs
-            voucherService.addVoucher(new Voucher("XMAX", LocalDate.of(2026,7,20),15));
-            voucherService.addVoucher(new Voucher("SUMMER15", LocalDate.of(2026,7,20),15));
-            voucherService.addVoucher(new Voucher("SUMMER5", LocalDate.of(2026,7,20),5));
-            voucherService.addVoucher(new Voucher("SUMMER10", LocalDate.of(2026,7,20),10));
+        TemporalAmount VOUCHER_MAX_DAYS = Period.ofDays(7);
+            LocalDate expirationDate = LocalDate.now().plus(VOUCHER_MAX_DAYS);
+            voucherService.addVoucher(new Voucher("XMAX", expirationDate,5));
+            voucherService.addVoucher(new Voucher("SUMMER15",expirationDate ,15));
+            voucherService.addVoucher(new Voucher("SUMMER5", expirationDate,5));
+            voucherService.addVoucher(new Voucher("SUMMER10", expirationDate,10));
         //endregion
     }
 }

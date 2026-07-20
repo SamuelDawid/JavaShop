@@ -1,18 +1,12 @@
 package org.javashop.mapper;
 
-import org.javashop.dto.voucherDTO.CreateVoucherRequest;
-import org.javashop.dto.voucherDTO.VoucherResponse;
+import org.javashop.dto.voucherDTO.CreateVoucherCommand;
+import org.javashop.dto.voucherDTO.VoucherDto;
 import org.javashop.models.Voucher;
+import org.mapstruct.Mapper;
 
-public class VoucherMapper {
-    private VoucherMapper() {
-    }
-
-    public static VoucherResponse toRespone(Voucher voucher) {
-        return new VoucherResponse(voucher.getId(), voucher.getVoucherName(), voucher.getExpirationDate(), voucher.getPercentage(), voucher.isUsed());
-    }
-
-    public static Voucher toEntity(CreateVoucherRequest request) {
-        return new Voucher(request.voucherName(), request.expirationDate(), request.percentage());
-    }
+@Mapper(componentModel = "spring")
+public interface VoucherMapper {
+    VoucherDto toRespone(Voucher voucher);
+    Voucher toEntity(CreateVoucherCommand request);
 }

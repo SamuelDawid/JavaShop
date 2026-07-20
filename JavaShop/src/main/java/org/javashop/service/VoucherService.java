@@ -1,9 +1,12 @@
 package org.javashop.service;
 
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.javashop.Exceptions.NotEnoughPointsException;
 import org.javashop.Exceptions.VoucherAlreadyExistsException;
 import org.javashop.Exceptions.VoucherNotFoundException;
+import org.javashop.dto.voucherDTO.VoucherDto;
+import org.javashop.mapper.VoucherMapper;
 import org.javashop.models.Voucher;
 import org.javashop.repo.VoucherRepository;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import java.time.temporal.TemporalAmount;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class VoucherService {
     private static final Map<Integer, Integer> POINTS_TO_DISCOUNT = Map.of(
             100, 10,
@@ -24,19 +28,22 @@ public class VoucherService {
     private static final TemporalAmount VOUCHER_MAX_DAYS = Period.ofDays(7);
 
     private final VoucherRepository repository;
+    private final VoucherMapper mapper;
 
-    public VoucherService(VoucherRepository repository) {
-        this.repository = repository;
+    public VoucherDto addVoucher(Voucher voucher) {
+        if (repository.findAll().contains(voucher)){
+            throw new VoucherAlreadyExistsException();
+        }
+        repository.save(voucher);
+        return  mapper.toRespone(voucher);
     }
 
-    public Voucher addVoucher(Voucher voucher) {
-        if (repository.findAll().contains(voucher)) throw new VoucherAlreadyExistsException();
-        return repository.save(voucher);
-    }
-
-    public Voucher update(Long id, Voucher voucher) {
-        if (repository.findById(id).isEmpty()) throw new VoucherNotFoundException();
-        return repository.save(voucher);
+    public VoucherDto update(Long id, Voucher voucher) {
+        if (repository.findById(id).isEmpty()){
+            throw new VoucherNotFoundException();
+        }
+        repository.save(voucher);
+        return mapper.toRespone(voucher);
     }
 
     public void delete(Long id) {
@@ -49,16 +56,16 @@ public class VoucherService {
         repository.delete(voucherToDelete);
     }
 
-    public List<Voucher> findAll() {
-        return repository.findAll();
+    public List<VoucherDto> findAll() {
+        return repository.findAll().stream().map(mapper::toRespone).toList();
     }
 
-    public Optional<Voucher> findById(Long id) {
-        return repository.findById(id);
+    public Optional<VoucherDto> findById(Long id) {
+        return repository.findById(id).map(mapper::toRespone);
     }
 
-    public Optional<Voucher> findByName(String voucherName) {
-        return repository.findByVoucherName(voucherName);
+    public Optional<VoucherDto> findByName(String voucherName) {
+        return repository.findByVoucherName(voucherName).map(mapper::toRespone);
     }
 
     public boolean validateVoucher(@NonNull Voucher voucher) {
