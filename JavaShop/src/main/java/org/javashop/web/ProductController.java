@@ -3,7 +3,6 @@ package org.javashop.web;
 import lombok.RequiredArgsConstructor;
 import org.javashop.dto.productDTO.CreateProductCommand;
 import org.javashop.dto.productDTO.ProductDto;
-import org.javashop.mapper.ProductMapper;
 import org.javashop.service.ProductManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductManager productManager;
-    private final ProductMapper productMapper;
 
     @GetMapping
     public List<ProductDto> all() {
